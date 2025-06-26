@@ -1,42 +1,26 @@
 import { useState } from 'react';
 import reactLogo from '@/assets/react.svg';
 import wxtLogo from '/wxt.svg';
-import { sendMessageToContent } from '@/messaging';
-import type { Message } from '@/messaging/types';
+import { sendMessage } from '@/messaging';
 // 添加调试日志
 console.log('Popup initialized');
 import './App.css';
 
 function App() {
   const [count, setCount] = useState(0);
-  
-  // 发送增加计数消息到content script
-  const sendIncrementMessage = async () => {
-    console.log('Preparing to send INCREMENT_COUNT message');
-    const message: Message = {
-      type: 'INCREMENT_COUNT',
-    };
-    try {
-      const response = await sendMessageToContent(message);
-      console.log('Increment message sent successfully, response:', response);
-    } catch (error) {
-      console.error('Failed to send increment message:', error);
-    }
-  };
-  
-  // 发送重置计数消息到content script
-  const sendResetMessage = async () => {
-    console.log('Preparing to send RESET_COUNT message');
-    const message: Message = {
-      type: 'RESET_COUNT',
-    };
-    try {
-      const response = await sendMessageToContent(message);
-      console.log('Reset message sent successfully, response:', response);
-    } catch (error) {
-      console.error('Failed to send reset message:', error);
-    }
-  };
+
+  const handleTest = async () => {
+    const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length === 0 || !tabs[0].id) throw new Error('No active tab found');
+     const res = await sendMessage('someMessage', { type: 'TEST_CONTENT', payload: 'Hello from content script' }, tabs[0].id);
+     console.log('Response from content script:', res);
+  }
+
+  const handleTest2 = async () => {
+     const res = await sendMessage('test-to-content', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
+     console.log('Response from content script:', res);
+  }
+
 
   return (
     <>
@@ -53,11 +37,11 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <button onClick={sendIncrementMessage}>
-          增加Content中的计数
+        <button onClick={handleTest}>
+          test
         </button>
-        <button onClick={sendResetMessage}>
-          重置Content中的计数
+        <button onClick={handleTest2}>
+          test2
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR

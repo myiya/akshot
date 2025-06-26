@@ -7,45 +7,45 @@ interface MessagingProtocol {
   'popup-to-content': Message;
   // 从content发送到popup的消息
   'content-to-popup': Message;
+  // 测试消息
+  'test-to-content': Message;
+  // 测试promise消息
+  someMessage(message: Message): Promise<string>; 
 }
 
 // 创建消息服务
-const { sendMessage, onMessage } = defineExtensionMessaging<MessagingProtocol>();
+export const { sendMessage, onMessage } = defineExtensionMessaging<MessagingProtocol>();
 
-// 发送消息到content script
+/**
+ * @description 获取当前活动tab的id
+ * @returns 当前活动tab的id
+ */
+export const getActTabId = async () => {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+  if (tabs.length === 0 || !tabs[0].id) throw new Error('No active tab found');
+  return tabs[0].id;
+}
+
+// 发送消息到content script（通过background转发）
 export const sendMessageToContent = async (message: Message) => {
-  console.log('Sending message to content script:', message);
+  console.log('Sending message to content script via background:', message);
   try {
-    // 获取当前标签页
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-    if (tabs.length === 0) {
-      throw new Error('No active tab found');
-    }
-    
-    if (!tabs[0].id) {
-      throw new Error('Tab ID is undefined');
-    }
-    
-    console.log('Sending to tab:', tabs[0].id);
-    
-    // 发送消息到当前标签页并等待响应
+    if (tabs.length === 0 || !tabs[0].id) throw new Error('No active tab found');
     return new Promise((resolve, reject) => {
-      browser.tabs.sendMessage(
-        tabs[0].id!, 
-        {
-          type: 'popup-to-content',
-          data: message
-        },
-        (response) => {
-          if (browser.runtime.lastError) {
-            console.error('Error in sendMessage:', browser.runtime.lastError);
-            reject(browser.runtime.lastError);
-          } else {
-            console.log('Received response from content script:', response);
-            resolve(response);
-          }
+      browser.runtime.sendMessage({
+        type: 'popup-to-content',
+        data: message,
+        tabId: tabs[0].id
+      }, (response) => {
+        if (browser.runtime.lastError) {
+          console.error('Error in sendMessage:', browser.runtime.lastError);
+          reject(browser.runtime.lastError);
+        } else {
+          console.log('Received response from background/content script:', response);
+          resolve(response);
         }
-      );
+      });
     });
   } catch (error) {
     console.error('Error sending message to content:', error);
