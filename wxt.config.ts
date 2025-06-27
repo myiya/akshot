@@ -9,4 +9,5 @@ export default defineConfig({
   webExt: {
     startUrls: ["https://www.baidu.com"],
   },
+  debug: true,
 });

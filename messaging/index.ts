@@ -10,7 +10,7 @@ interface MessagingProtocol {
   // 测试消息
   'test-to-content': Message;
   // 测试promise消息
-  someMessage(message: Message): Promise<string>; 
+  someMessage(message: Message): Promise<number>; 
 }
 
 // 创建消息服务
@@ -26,59 +26,22 @@ export const getActTabId = async () => {
   return tabs[0].id;
 }
 
-// 发送消息到content script（通过background转发）
-export const sendMessageToContent = async (message: Message) => {
-  console.log('Sending message to content script via background:', message);
+/**
+ * 向当前活动标签页发送消息
+ * @template T - 消息响应的类型
+ * @param {keyof MessagingProtocol} channel - 消息通道，必须是在 MessagingProtocol 中定义的键
+ * @param {Message} message - 消息内容，包含 type 和可选的 payload
+ * @returns {Promise<T>} 消息响应的 Promise
+ * @throws {Error} 如果没有找到活动标签页或消息发送失败
+ */
+export const sendActMessage = async <T = any>(channel: keyof MessagingProtocol, message: Message): Promise<T> => {
   try {
-    const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-    if (tabs.length === 0 || !tabs[0].id) throw new Error('No active tab found');
-    return new Promise((resolve, reject) => {
-      browser.runtime.sendMessage({
-        type: 'popup-to-content',
-        data: message,
-        tabId: tabs[0].id
-      }, (response) => {
-        if (browser.runtime.lastError) {
-          console.error('Error in sendMessage:', browser.runtime.lastError);
-          reject(browser.runtime.lastError);
-        } else {
-          console.log('Received response from background/content script:', response);
-          resolve(response);
-        }
-      });
-    });
-  } catch (error) {
-    console.error('Error sending message to content:', error);
+    // 获取当前活动标签页ID
+    const tabId = await getActTabId();
+    // 发送消息并返回结果
+    return await sendMessage(channel, message, tabId) as T;
+  } catch (error: any) {
+    console.error(`Failed to send message to active tab: ${error.message || error}`);
     throw error;
   }
-};
-
-// 发送消息到popup
-export const sendMessageToPopup = (message: Message) => {
-  console.log('content-to-popup', message);
-  return sendMessage('content-to-popup', message);
-};
-
-// 监听来自popup的消息
-export const onMessageFromPopup = (callback: (message: Message) => void) => {
-  console.log('Registering onMessageFromPopup listener');
-  try {
-    const unsubscribe = onMessage('popup-to-content', (message) => {
-      console.log('onMessageFromPopup received:', message);
-      callback(message.data);
-    });
-    return unsubscribe;
-  } catch (error) {
-    console.error('Error registering popup message listener:', error);
-    // 返回一个空函数作为unsubscribe，以防止错误
-    return () => {};
-  }
-};
-
-// 监听来自content的消息
-export const onMessageFromContent = (callback: (message: Message) => void) => {
-  return onMessage('content-to-popup', (message) => {
-    console.log('onMessageFromContent', message);
-    callback(message.data);
-  });
-};
+}

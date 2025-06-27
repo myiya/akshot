@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import type { Message } from "@/messaging/types";
 import { onMessage } from "@/messaging";
 
 // 添加调试日志
@@ -18,7 +17,8 @@ export default () => {
   const increment = () => setCount((count) => count + 1);
 
   const ge = async () => {
-    return 'ge'
+    increment()
+    return countRef.current;
   };
 
   useEffect(() =>{
@@ -28,7 +28,7 @@ export default () => {
       // return message;
       // return 11;
     });
-    onMessage('someMessage', async (message): Promise<string> => {
+    onMessage('someMessage', async (message): Promise<number> => {
       console.log('Content component received message via custom event:', message);
       let res = await ge();
       return res;
