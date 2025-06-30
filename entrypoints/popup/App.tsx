@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import reactLogo from '@/assets/react.svg';
 import wxtLogo from '/wxt.svg';
 import { sendMessage, sendActMessage } from '@/messaging';
@@ -9,19 +9,39 @@ console.log('Popup initialized');
 
 function App() {
   const [count, setCount] = useState(1);
+  const [isScreenshotting, setIsScreenshotting] = useState(false);
+  const [status, setStatus] = useState('');
 
+  // 处理截图
+  const handleScreenshot = async () => {
+    try {
+      setIsScreenshotting(true);
+      setStatus('正在准备截图...');
+      
+      // 发送截图请求到content script
+      await sendActMessage('test-to-content', { 
+        type: 'TAKE_SCREENSHOT', 
+        payload: { timestamp: Date.now() }
+      });
+      
+      setStatus('截图成功！');
+      // 关闭popup窗口
+      setTimeout(() => {
+        window.close();
+      }, 500);
+    } catch (error: any) {
+      console.error('截图失败:', error.message || error);
+      setStatus(`截图失败: ${error.message || '未知错误'}`);
+    } finally {
+      setIsScreenshotting(false);
+    }
+  };
+
+  // 测试函数
   const handleTest = async () => {
     const res = await sendActMessage('someMessage', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
     console.log('Response from content script:', res);
     setCount(res);
-  }
-
-  const handleTest2 = async () => {
-    // const wrapImg = await sendMessage('capture-visible-tab');
-    // const res = await sendActMessage('send-screenshot-to-content', { type: 'TEST_CONTENT', payload: wrapImg });
-    // console.log('handleTest2 res', res);
-    const res = await sendActMessage('test-to-content', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
-    console.log('Response from content script:', res);
   }
   
   // 使用封装的sendActMessage函数发送消息到当前活动标签页
@@ -42,35 +62,30 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="header">
+        <h1>AkShot 截图工具</h1>
       </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      
+      <div className="screenshot-container">
+        <button 
+          className={`screenshot-button ${isScreenshotting ? 'disabled' : ''}`}
+          onClick={handleScreenshot}
+          disabled={isScreenshotting}
+        >
+          {isScreenshotting ? '截图中...' : '开始截图'}
         </button>
-        <button onClick={handleTest}>
-          test
-        </button>
-        <button onClick={handleTest2}>
-          截图
-        </button>
-        <button onClick={handleTestAct}>
-          测试当前标签页
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        
+        {status && <p className="status-message">{status}</p>}
+        
+        <div className="instructions">
+          <p>点击"开始截图"按钮，然后在网页上选择要截取的区域。</p>
+          <p>截图将自动保存，可以通过网页右下角的📸按钮查看历史截图。</p>
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
+      
+      <div className="footer">
+        <p>AkShot - 网页截图工具</p>
+      </div>
     </>
   );
 }

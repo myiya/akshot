@@ -1,5 +1,5 @@
 import { defineExtensionMessaging } from '@webext-core/messaging';
-import type { Message } from './types';
+import type { Message, MessageType } from './types';
 
 // 定义消息协议
 interface MessagingProtocol {
@@ -19,6 +19,30 @@ interface MessagingProtocol {
    * @description 发送当前标签页的截图到content
    */
   'send-screenshot-to-content'(message: Message): void;
+
+  /**
+   * @description 触发截图操作
+   * @param message 包含截图操作的相关信息
+   */
+  'take-screenshot'(message: { type: MessageType; payload?: { timestamp?: number } }): void;
+
+  /**
+   * @description 保存截图到IndexedDB
+   * @param message 包含要保存的截图数据
+   */
+  'save-screenshot'(message: { type: MessageType; payload: { url: string; imageData: string } }): Promise<string>;
+
+  /**
+   * @description 获取当前网站的所有截图
+   * @param message 包含查询条件
+   */
+  'get-screenshots'(message: { type: MessageType; payload?: { url?: string } }): Promise<any[]>;
+
+  /**
+   * @description 删除指定截图
+   * @param message 包含要删除的截图ID
+   */
+  'delete-screenshot'(message: { type: MessageType; payload: { id: string } }): Promise<void>;
 
   // 测试promise消息
   someMessage(message: Message): void; 
