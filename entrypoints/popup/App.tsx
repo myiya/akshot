@@ -2,9 +2,10 @@ import { useState } from 'react';
 import reactLogo from '@/assets/react.svg';
 import wxtLogo from '/wxt.svg';
 import { sendMessage, sendActMessage } from '@/messaging';
+import './App.css';
+
 // 添加调试日志
 console.log('Popup initialized');
-import './App.css';
 
 function App() {
   const [count, setCount] = useState(1);
@@ -16,8 +17,11 @@ function App() {
   }
 
   const handleTest2 = async () => {
-     const res = await sendMessage('test-to-content', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
-     console.log('Response from content script:', res);
+    const wrapImg = await sendMessage('capture-visible-tab');
+    const res = await sendActMessage('send-screenshot-to-content', { type: 'TEST_CONTENT', payload: wrapImg });
+    console.log('handleTest2 res', res);
+    // const res = await sendMessage('test-to-content', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
+    // console.log('Response from content script:', res);
   }
   
   // 使用封装的sendActMessage函数发送消息到当前活动标签页
@@ -55,7 +59,7 @@ function App() {
           test
         </button>
         <button onClick={handleTest2}>
-          test2
+          截图
         </button>
         <button onClick={handleTestAct}>
           测试当前标签页

@@ -9,8 +9,19 @@ interface MessagingProtocol {
   'content-to-popup': Message;
   // 测试消息
   'test-to-content': Message;
+
+  /**
+   * @description 截取当前可见标签页的屏幕截图
+   */
+  'capture-visible-tab'(): Promise<string>;
+
+  /**
+   * @description 发送当前标签页的截图到content
+   */
+  'send-screenshot-to-content'(message: Message): void;
+
   // 测试promise消息
-  someMessage(message: Message): Promise<number>; 
+  someMessage(message: Message): void; 
 }
 
 // 创建消息服务

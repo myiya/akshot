@@ -17,7 +17,8 @@
   "dependencies": {
     "@webext-core/messaging": "^2.3.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-screenshots": "^0.5.22"
   },
   "devDependencies": {
     "@types/react": "^19.1.2",

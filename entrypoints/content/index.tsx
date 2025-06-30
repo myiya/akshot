@@ -1,7 +1,6 @@
-import "./style.css";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import type { Message } from "@/messaging/types";
+import "./style.css";
 
 // 添加详细的调试日志
 console.log('Content script loaded', { id: browser.runtime.id });
