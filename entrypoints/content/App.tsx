@@ -98,6 +98,9 @@ export default () => {
       const payload = message as { payload?: { id?: string } };
       if (payload.payload?.id) {
         await handleDeleteScreenshot(payload.payload.id);
+        return true;
+      } else {
+        return false;
       }
     });
   }, []);

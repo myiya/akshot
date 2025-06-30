@@ -46,13 +46,13 @@ interface MessagingProtocol {
    * @description 删除指定截图
    * @param message 包含要删除的截图ID
    */
-  'delete-screenshot'(message: { type: MessageType; payload: { id: string } }): Promise<void>;
+  'delete-screenshot'(message: { type: MessageType; payload: { id: string } }): Promise<boolean>;
 
   /**
    * @description 清空指定网站的所有截图
    * @param message 包含要清空的网站URL
    */
-  'clear-screenshots-by-url'(message: { type: MessageType; payload: { url: string } }): Promise<void>;
+  'clear-screenshots-by-url'(message: { type: MessageType; payload: { url: string } }): Promise<boolean>;
 }
 
 // 创建消息服务
