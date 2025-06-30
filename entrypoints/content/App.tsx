@@ -76,54 +76,46 @@ export default () => {
         await handleDeleteScreenshot(payload.payload.id);
       }
     });
-
-    // 创建侧边栏切换按钮
-    const toggleButton = document.createElement("div");
-    toggleButton.className = "akshot-toggle-button";
-    toggleButton.innerHTML = "📸";
-    toggleButton.title = "查看截图历史";
-    toggleButton.onclick = () => setShowSidebar(!showSidebar);
-    document.body.appendChild(toggleButton);
-
-    return () => {
-      // 清理
-      document.body.removeChild(toggleButton);
-    };
   }, []);
 
-  // 如果没有截图，不显示侧边栏
-  if (screenshots.length === 0 && !showSidebar) {
-    return null;
-  }
-
   return (
-    <div className={`akshot-sidebar ${showSidebar ? "open" : ""}`}>
-      <div className="akshot-sidebar-header">
-        <h3>截图历史</h3>
-        <button onClick={() => setShowSidebar(false)}>×</button>
-      </div>
-      <div className="akshot-screenshots-container">
-        {screenshots.length === 0 ? (
-          <p className="akshot-no-screenshots">暂无截图</p>
-        ) : (
-          screenshots.map((shot) => (
-            <div key={shot.id} className="akshot-screenshot-item">
-              <div className="akshot-screenshot-time">
-                {new Date(shot.timestamp).toLocaleString()}
+    <div>
+      <div className="akshot-toggle-button" title="查看截图历史" onClick={() => setShowSidebar(!showSidebar)}>📸</div>
+      <div className={`akshot-sidebar ${showSidebar ? "open" : ""}`}>
+        <div className="akshot-sidebar-header">
+          <h3>截图历史</h3>
+          <button onClick={() => setShowSidebar(false)}>×</button>
+        </div>
+        <div className="akshot-screenshots-container">
+          {screenshots.length === 0 ? (
+            <p className="akshot-no-screenshots">暂无截图</p>
+          ) : (
+            screenshots.map((shot) => (
+              <div key={shot.id} className="akshot-screenshot-item">
+                <div className="akshot-screenshot-time">
+                  {new Date(shot.timestamp).toLocaleString()}
+                </div>
+                {shot.originalUrl && (
+                  <div className="akshot-screenshot-url">
+                    <a href={shot.originalUrl} target="_blank" rel="noopener noreferrer">
+                      {shot.originalUrl}
+                    </a>
+                  </div>
+                )}
+                <img 
+                  src={shot.imageData} 
+                  alt="Screenshot" 
+                  onClick={() => window.open(shot.imageData, "_blank")}
+                />
+                <div className="akshot-screenshot-actions">
+                  <button onClick={() => handleDeleteScreenshot(shot.id)}>
+                    删除
+                  </button>
+                </div>
               </div>
-              <img 
-                src={shot.imageData} 
-                alt="Screenshot" 
-                onClick={() => window.open(shot.imageData, "_blank")}
-              />
-              <div className="akshot-screenshot-actions">
-                <button onClick={() => handleDeleteScreenshot(shot.id)}>
-                  删除
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
