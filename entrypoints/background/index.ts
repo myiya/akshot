@@ -3,27 +3,6 @@ import { dataUrltoBlob } from "@/utils";
 
 export default defineBackground(() => {
   console.log('Background script initialized', { id: browser.runtime.id });
-
-  onMessage('capture-visible-tab', async message => {
-    console.log('Background received message:', message);
-    const dataUrl = await browser.tabs.captureVisibleTab();
-    const a = await browser.tabs.captureVisibleTab();
-
-    console.log('dataUrl', dataUrl);
-    return dataUrl;
-    // await downloadImage(dataUrl);
-    // console.log('Sending message to content script:')
-  });
-
-  // (browser.action ?? browser.browserAction).onClicked.addListener(
-  //   async (tab) => {
-  //     try {
-        
-  //     } catch (err) {
-  //       console.error("Cannot capture screenshot of current tab", tab, err);
-  //     }
-  //   },
-  // );
 });
 
 async function downloadImage(dataUrl: string): Promise<void> {

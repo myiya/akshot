@@ -38,7 +38,7 @@ export default () => {
     loadScreenshots();
 
     // 监听截图请求
-    onMessage("test-to-content", (message: any) => {
+    onMessage("take-to-content", (message: any) => {
       console.log("Content component received screenshot request:", message);
       new ScreenShot({
         enableWebRtc: false,

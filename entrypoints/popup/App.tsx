@@ -19,7 +19,7 @@ function App() {
       setStatus('正在准备截图...');
       
       // 发送截图请求到content script
-      await sendActMessage('test-to-content', { 
+      await sendActMessage('take-to-content', { 
         type: 'TAKE_SCREENSHOT', 
         payload: { timestamp: Date.now() }
       });
@@ -36,29 +36,6 @@ function App() {
       setIsScreenshotting(false);
     }
   };
-
-  // 测试函数
-  const handleTest = async () => {
-    const res = await sendActMessage('someMessage', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
-    console.log('Response from content script:', res);
-    setCount(res);
-  }
-  
-  // 使用封装的sendActMessage函数发送消息到当前活动标签页
-  const handleTestAct = async () => {
-    try {
-      const res = await sendActMessage<number>('someMessage', { 
-        type: 'TEST_CONTENT', 
-        payload: 'Hello from active tab using sendActMessage' 
-      });
-      console.log('Response from active tab:', res);
-      setCount(res);
-    } catch (error: any) {
-      console.error('Error sending message to active tab:', error.message || error);
-      alert(`发送消息失败: ${error.message || '未知错误'}`);
-    }
-  }
-
 
   return (
     <>

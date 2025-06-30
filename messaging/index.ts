@@ -3,12 +3,10 @@ import type { Message, MessageType } from './types';
 
 // 定义消息协议
 interface MessagingProtocol {
-  // 从popup发送到content的消息
-  'popup-to-content': Message;
-  // 从content发送到popup的消息
-  'content-to-popup': Message;
-  // 测试消息
-  'test-to-content': Message;
+  /**
+   * @description 截取当前可见标签页的屏幕截图
+   */
+  'take-to-content': Message;
 
   /**
    * @description 截取当前可见标签页的屏幕截图
@@ -43,9 +41,6 @@ interface MessagingProtocol {
    * @param message 包含要删除的截图ID
    */
   'delete-screenshot'(message: { type: MessageType; payload: { id: string } }): Promise<void>;
-
-  // 测试promise消息
-  someMessage(message: Message): void; 
 }
 
 // 创建消息服务
