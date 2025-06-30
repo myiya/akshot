@@ -17,11 +17,11 @@ function App() {
   }
 
   const handleTest2 = async () => {
-    const wrapImg = await sendMessage('capture-visible-tab');
-    const res = await sendActMessage('send-screenshot-to-content', { type: 'TEST_CONTENT', payload: wrapImg });
-    console.log('handleTest2 res', res);
-    // const res = await sendMessage('test-to-content', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
-    // console.log('Response from content script:', res);
+    // const wrapImg = await sendMessage('capture-visible-tab');
+    // const res = await sendActMessage('send-screenshot-to-content', { type: 'TEST_CONTENT', payload: wrapImg });
+    // console.log('handleTest2 res', res);
+    const res = await sendActMessage('test-to-content', { type: 'TEST_CONTENT', payload: 'Hello from content script' });
+    console.log('Response from content script:', res);
   }
   
   // 使用封装的sendActMessage函数发送消息到当前活动标签页
