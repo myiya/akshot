@@ -19,7 +19,9 @@
     "idb": "^8.0.3",
     "js-web-screen-shot": "1.9.9-rc.27",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "@tailwindcss/vite": "^4.1.4",
+    "tailwindcss": "^4.0.9"
   },
   "devDependencies": {
     "@types/react": "^19.1.2",

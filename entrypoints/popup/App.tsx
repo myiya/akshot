@@ -24,7 +24,7 @@ function App() {
         payload: { timestamp: Date.now() }
       });
       
-      setStatus('截图成功！');
+      setStatus('开始截图...');
       // 关闭popup窗口
       setTimeout(() => {
         window.close();
@@ -45,7 +45,7 @@ function App() {
       
       <div className="screenshot-container">
         <button 
-          className={`screenshot-button ${isScreenshotting ? 'disabled' : ''}`}
+          className={`screenshot-button bg-red-500 rounded-2xl border-amber-100 ${isScreenshotting ? 'disabled' : ''}`}
           onClick={handleScreenshot}
           disabled={isScreenshotting}
         >
