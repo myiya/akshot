@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { onMessage } from "@/messaging";
+import { onMessage, sendMessage } from "@/messaging";
 import ScreenShot from "js-web-screen-shot";
-import { saveScreenshot, getScreenshotsByUrl, deleteScreenshot, getAllScreenshots } from "@/utils/db";
 import "./style.css";
 
 // 添加调试日志
@@ -18,9 +17,14 @@ export default () => {
     try {
       let shots;
       if (activeTab === 'current') {
-        shots = await getScreenshotsByUrl(currentUrl);
+        shots = await sendMessage('get-screenshots', {
+          type: 'GET_SCREENSHOTS',
+          payload: { url: currentUrl }
+        });
       } else {
-        shots = await getAllScreenshots();
+        shots = await sendMessage('get-all-screenshots', {
+          type: 'GET_ALL_SCREENSHOTS'
+        });
       }
       setScreenshots(shots);
       console.log(`Loaded ${activeTab} screenshots:`, shots.length);
@@ -37,7 +41,10 @@ export default () => {
   // 删除截图
   const handleDeleteScreenshot = async (id: string) => {
     try {
-      await deleteScreenshot(id);
+      await sendMessage('delete-screenshot', {
+        type: 'DELETE_SCREENSHOT',
+        payload: { id }
+      });
       await loadScreenshots(); // 重新加载截图列表
     } catch (error) {
       console.error("Failed to delete screenshot:", error);
@@ -61,7 +68,10 @@ export default () => {
           console.log("Screenshot taken", cutInfo);
           try {
             // 保存截图到IndexedDB
-            await saveScreenshot(currentUrl, base64);
+            await sendMessage('save-screenshot', {
+              type: 'SAVE_SCREENSHOT',
+              payload: { url: currentUrl, imageData: base64 }
+            });
             // 重新加载截图列表
             await loadScreenshots();
             // 显示侧边栏

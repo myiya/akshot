@@ -6,7 +6,9 @@ export type MessageType =
   | 'TAKE_SCREENSHOT'
   | 'SAVE_SCREENSHOT'
   | 'GET_SCREENSHOTS'
-  | 'DELETE_SCREENSHOT';
+  | 'GET_ALL_SCREENSHOTS'
+  | 'DELETE_SCREENSHOT'
+  | 'CLEAR_SCREENSHOTS_BY_URL';
 
 // 定义消息接口
 export interface Message {
