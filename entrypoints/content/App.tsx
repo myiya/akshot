@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { onMessage } from "@/messaging";
 import ScreenShot from "js-web-screen-shot";
-import { saveScreenshot, getScreenshotsByUrl, deleteScreenshot } from "@/utils/db";
+import { saveScreenshot, getScreenshotsByUrl, deleteScreenshot, getAllScreenshots } from "@/utils/db";
 import "./style.css";
 
 // 添加调试日志
@@ -10,17 +10,28 @@ console.log("Content script component initialized");
 export default () => {
   const [screenshots, setScreenshots] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [activeTab, setActiveTab] = useState<'current' | 'all'>('current'); // 标签页状态
   const currentUrl = window.location.href.split("#")[0].split("?")[0]; // 获取基本URL，不包含查询参数和锚点
 
-  // 加载当前网站的截图
+  // 加载截图（根据当前标签页）
   const loadScreenshots = async () => {
     try {
-      const shots = await getScreenshotsByUrl(currentUrl);
+      let shots;
+      if (activeTab === 'current') {
+        shots = await getScreenshotsByUrl(currentUrl);
+      } else {
+        shots = await getAllScreenshots();
+      }
       setScreenshots(shots);
-      console.log("Loaded screenshots:", shots.length);
+      console.log(`Loaded ${activeTab} screenshots:`, shots.length);
     } catch (error) {
       console.error("Failed to load screenshots:", error);
     }
+  };
+
+  // 切换标签页
+  const handleTabChange = (tab: 'current' | 'all') => {
+    setActiveTab(tab);
   };
 
   // 删除截图
@@ -36,6 +47,9 @@ export default () => {
   useEffect(() => {
     // 初始加载截图
     loadScreenshots();
+  }, [activeTab]); // 当标签页切换时重新加载
+
+  useEffect(() => {
 
     // 监听截图请求
     onMessage("take-to-content", (message: any) => {
@@ -85,6 +99,20 @@ export default () => {
         <div className="akshot-sidebar-header">
           <h3>截图历史</h3>
           <button onClick={() => setShowSidebar(false)}>×</button>
+        </div>
+        <div className="akshot-tabs">
+          <button 
+            className={`akshot-tab ${activeTab === 'current' ? 'active' : ''}`}
+            onClick={() => handleTabChange('current')}
+          >
+            当前网站
+          </button>
+          <button 
+            className={`akshot-tab ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => handleTabChange('all')}
+          >
+            全部网站
+          </button>
         </div>
         <div className="akshot-screenshots-container">
           {screenshots.length === 0 ? (

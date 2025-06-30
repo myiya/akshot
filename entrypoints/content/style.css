@@ -67,6 +67,36 @@ body {
   color: #666;
 }
 
+/* 标签页 */
+.akshot-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f8f8;
+}
+
+.akshot-tab {
+  flex: 1;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.akshot-tab:hover {
+  background-color: #e8e8e8;
+  color: #333;
+}
+
+.akshot-tab.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  background-color: #fff;
+}
+
 /* 截图容器 */
 .akshot-screenshots-container {
   flex: 1;

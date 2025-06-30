@@ -91,6 +91,13 @@ export const getScreenshotsByUrl = async (url: string) => {
   return screenshots.sort((a, b) => b.timestamp - a.timestamp); // 按时间倒序排列
 };
 
+// 获取所有网站的截图
+export const getAllScreenshots = async () => {
+  const db = await initDB();
+  const screenshots = await db.getAll('screenshots');
+  return screenshots.sort((a, b) => b.timestamp - a.timestamp); // 按时间倒序排列
+};
+
 // 删除截图
 export const deleteScreenshot = async (id: string) => {
   const db = await initDB();
