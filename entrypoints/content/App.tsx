@@ -56,10 +56,9 @@ export default () => {
   }, [activeTab]); // 当标签页切换时重新加载
 
   useEffect(() => {
-
-    // 监听截图请求
+    // 同时保留原有的onMessage监听（用于其他消息）
     onMessage("take-to-content", (message: any) => {
-      console.log("Content component received screenshot request:", message);
+      console.log("Content component received screenshot request via onMessage:", message);
       new ScreenShot({
         enableWebRtc: false,
         level: 99999,

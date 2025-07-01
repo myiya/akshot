@@ -15,7 +15,7 @@ function App() {
       setStatus('正在准备截图...');
       
       // 发送截图请求到content script
-      await sendActMessage('take-to-content', { 
+      await sendMessage('take-to-content', { 
         type: 'TAKE_SCREENSHOT', 
         payload: { timestamp: Date.now() }
       });

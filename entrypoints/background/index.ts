@@ -1,9 +1,34 @@
 import { dataUrltoBlob } from "@/utils";
-import { onMessage } from "@/messaging";
+import { onMessage, sendActMessage } from "@/messaging";
 import { saveScreenshot, getScreenshotsByUrl, getAllScreenshots, deleteScreenshot, clearScreenshotsByUrl } from "@/utils/db";
 
 export default defineBackground(() => {
   console.log('Background script initialized', { id: browser.runtime.id });
+  
+  // 监听来自popup的截图请求，转发到content脚本
+  onMessage('take-to-content', async ({ data, sender }) => {
+    try {
+      console.log('Background received take-to-content message:', data);
+
+      await sendActMessage('take-to-content', {
+        type: 'TAKE_SCREENSHOT', 
+        payload: data
+      })
+      // // 获取当前活动标签页
+      // const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+      // if (tabs.length === 0 || !tabs[0].id) {
+      //   throw new Error('No active tab found');
+      // }
+      
+      // // 转发消息到content脚本
+      // await browser.tabs.sendMessage(tabs[0].id, {
+      //   type: 'take-to-content',
+      //   data: data
+      // });
+    } catch (error) {
+      console.error('Failed to forward screenshot request:', error);
+    }
+  });
   
   // 监听来自content脚本的数据库操作请求
   onMessage('save-screenshot', async ({ data }) => {
