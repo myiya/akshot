@@ -1,6 +1,5 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "~/assets/tailwind.css";
 import "./style.css";
 
 // 添加详细的调试日志
