@@ -15,6 +15,10 @@ export default defineConfig({
     action: {
       default_title: "AkShot 截图工具"
     },
+    options_ui: {
+      page: "option.html",
+      open_in_tab: true
+    },
   },
   webExt: {
     startUrls: ["https://www.baidu.com"],

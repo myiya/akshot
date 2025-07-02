@@ -1,0 +1,428 @@
+/* Option 页面容器 */
+.akshot-option-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Option 页面头部 */
+.akshot-option-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2rem 0;
+}
+
+.akshot-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.akshot-header-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.akshot-header-icon-emoji {
+  font-size: 28px;
+}
+
+.akshot-header-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.akshot-header-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Option 页面主内容 */
+.akshot-option-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* 页面头部 */
+.akshot-page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.akshot-page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.akshot-page-header p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* 分类页面 */
+.akshot-categories-page {
+  width: 100%;
+}
+
+/* 分类网格 */
+.akshot-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 2rem;
+}
+
+/* 分类卡片 */
+.akshot-category-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.akshot-category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 分类预览图 */
+.akshot-category-preview {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.akshot-category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.akshot-category-card:hover .akshot-category-image {
+  transform: scale(1.05);
+}
+
+.akshot-category-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.akshot-category-placeholder-icon {
+  font-size: 48px;
+  opacity: 0.8;
+}
+
+.akshot-category-count-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+/* 分类信息 */
+.akshot-category-info {
+  padding: 16px;
+}
+
+.akshot-category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.akshot-category-icon {
+  font-size: 20px;
+}
+
+.akshot-category-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.akshot-category-domain {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+.akshot-category-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.akshot-category-time {
+  font-style: italic;
+}
+
+/* 面包屑导航 */
+.akshot-category-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 12px 0;
+}
+
+.akshot-breadcrumb-back {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.akshot-breadcrumb-back:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(-2px);
+}
+
+.akshot-breadcrumb-current {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 截图网格 */
+.akshot-screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 1rem;
+}
+
+/* 截图卡片 */
+.akshot-screenshot-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.akshot-screenshot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 截图图片容器 */
+.akshot-card-image-container {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.akshot-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.akshot-screenshot-card:hover .akshot-card-image {
+  transform: scale(1.05);
+}
+
+/* 截图卡片覆盖层 */
+.akshot-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.akshot-screenshot-card:hover .akshot-card-overlay {
+  opacity: 1;
+}
+
+.akshot-card-view-btn,
+.akshot-card-delete-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.akshot-card-view-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.akshot-card-delete-btn:hover {
+  background: rgba(255, 59, 48, 0.9);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* 截图卡片信息 */
+.akshot-card-info {
+  padding: 12px;
+}
+
+.akshot-card-website {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.akshot-card-website-icon {
+  font-size: 14px;
+}
+
+.akshot-card-website-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+}
+
+.akshot-card-url {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6px;
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.akshot-card-time {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 空状态 */
+.akshot-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.akshot-empty-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.akshot-empty-emoji {
+  font-size: 32px;
+  opacity: 0.6;
+}
+
+.akshot-empty-text {
+  max-width: 400px;
+}
+
+.akshot-empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.5rem 0;
+}
+
+.akshot-empty-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .akshot-option-main {
+    padding: 1rem;
+  }
+  
+  .akshot-categories-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .akshot-screenshots-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .akshot-header-content {
+    padding: 0 1rem;
+  }
+  
+  .akshot-header-title {
+    font-size: 1.5rem;
+  }
+}
