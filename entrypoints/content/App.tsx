@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { onMessage, sendMessage } from '@/messaging';
 import ScreenShot from 'js-web-screen-shot';
 import './style.css';
@@ -82,6 +82,21 @@ const getWebsiteName = (domain: string): string => {
 export default () => {
   const [screenshots, setScreenshots] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
+  // 计算默认位置：右侧中下部分
+  const getDefaultPosition = () => {
+    const buttonSize = 50;
+    const margin = 20;
+    return {
+      x: window.innerWidth - buttonSize - margin,
+      y: window.innerHeight * 0.7 // 屏幕高度的70%位置
+    };
+  };
+  
+  const [buttonPosition, setButtonPosition] = useState(getDefaultPosition());
+  const [isScreenshotting, setIsScreenshotting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const buttonRef = useRef<HTMLDivElement>(null);
   const currentUrl = window.location.href.split("#")[0].split("?")[0];
 
   // 加载当前页面截图
@@ -123,6 +138,10 @@ export default () => {
     // 同时保留原有的onMessage监听（用于其他消息）
     onMessage("take-to-content", (message: any) => {
       console.log("Content component received screenshot request via onMessage:", message);
+      setShowSidebar(false);
+      // 截图开始时隐藏按钮
+      setIsScreenshotting(true);
+      
       new ScreenShot({
         enableWebRtc: false,
         level: 99999,
@@ -140,10 +159,15 @@ export default () => {
             setShowSidebar(true);
           } catch (error) {
             console.error("Failed to save screenshot:", error);
+          } finally {
+            // 截图完成后显示按钮
+            setIsScreenshotting(false);
           }
         },
         closeCallback: () => {
           console.log("截图结束");
+          // 截图取消时也要显示按钮
+          setIsScreenshotting(false);
         },
       });
     });
@@ -167,16 +191,109 @@ export default () => {
     });
   }, []);
 
+  // 处理拖拽开始
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return; // 只处理左键点击
+    
+    const rect = buttonRef.current?.getBoundingClientRect();
+    if (rect) {
+      setDragOffset({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+      setIsDragging(true);
+    }
+    e.preventDefault();
+  };
+
+  // 处理拖拽移动
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    
+    const newX = e.clientX - dragOffset.x;
+    const newY = e.clientY - dragOffset.y;
+    
+    // 限制按钮在屏幕范围内
+    const buttonSize = 50; // 按钮大小
+    const maxX = window.innerWidth - buttonSize;
+    const maxY = window.innerHeight - buttonSize;
+    
+    setButtonPosition({
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY))
+    });
+  };
+
+  // 处理拖拽结束
+  const handleMouseUp = (e: MouseEvent) => {
+    if (isDragging) {
+      setIsDragging(false);
+      
+      // 如果拖拽距离很小，视为点击事件
+      const rect = buttonRef.current?.getBoundingClientRect();
+      if (rect) {
+        const dragDistance = Math.sqrt(
+          Math.pow(e.clientX - (rect.left + dragOffset.x), 2) +
+          Math.pow(e.clientY - (rect.top + dragOffset.y), 2)
+        );
+        
+        if (dragDistance < 5) {
+          setShowSidebar(!showSidebar);
+        }
+      }
+    }
+  };
+
+  // 添加全局鼠标事件监听
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, dragOffset, showSidebar]);
+
+  // 监听窗口大小变化，调整按钮位置
+  useEffect(() => {
+    const handleResize = () => {
+      const buttonSize = 50;
+      const margin = 20;
+      const maxX = window.innerWidth - buttonSize;
+      const maxY = window.innerHeight - buttonSize;
+      
+      setButtonPosition(prev => ({
+        x: Math.max(0, Math.min(prev.x, maxX)),
+        y: Math.max(0, Math.min(prev.y, maxY))
+      }));
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div>
       {/* Toggle Button */}
-      <div 
-        className="akshot-toggle-button" 
-        title="查看截图历史" 
-        onClick={() => setShowSidebar(!showSidebar)}
-      >
-        <span className="akshot-toggle-icon">📸</span>
-      </div>
+      {!isScreenshotting && (
+        <div 
+          ref={buttonRef}
+          className={`akshot-toggle-button ${isDragging ? 'akshot-dragging' : ''}`}
+          style={{
+            left: `${buttonPosition.x}px`,
+            top: `${buttonPosition.y}px`,
+            position: 'fixed',
+            cursor: isDragging ? 'grabbing' : 'grab'
+          }}
+          title="查看截图历史（可拖拽移动）" 
+          onMouseDown={handleMouseDown}
+        >
+          <span className="akshot-toggle-icon">📸</span>
+        </div>
+      )}
       
       {/* Sidebar */}
       <div className={`akshot-sidebar ${
