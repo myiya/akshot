@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
-import { sendMessage } from "@/messaging";
+import React, { useState, useEffect } from 'react';
+import { getAllScreenshots, deleteScreenshot as deleteScreenshotFromDB } from '../../utils/db';
+import { sendMessage } from '../../messaging';
+import JSZip from 'jszip';
 import './style.css';
 
 // 网站分类接口
@@ -150,6 +152,49 @@ export default function App() {
       await loadScreenshots(); // 重新加载截图列表
     } catch (error) {
       console.error("Failed to delete screenshot:", error);
+    }
+  };
+
+  // 下载所有截图
+  const downloadAllScreenshots = async (categoryDomain: string) => {
+    try {
+      // 根据域名过滤截图
+      const categoryScreenshots = screenshots.filter(shot => {
+        const domain = getDomainFromUrl(shot.originalUrl || shot.url || '');
+        return domain === categoryDomain;
+      });
+      
+      if (categoryScreenshots.length === 0) {
+        alert('没有可下载的截图');
+        return;
+      }
+
+      const zip = new JSZip();
+      const categoryName = websiteCategories.find(cat => cat.domain === categoryDomain)?.name || categoryDomain;
+      
+      categoryScreenshots.forEach((shot, index) => {
+        const imageData = shot.dataUrl || shot.imageData;
+        if (imageData) {
+          // 移除 data:image/png;base64, 前缀
+          const base64Data = imageData.replace(/^data:image\/[a-z]+;base64,/, '');
+          const timestamp = new Date(shot.timestamp).toISOString().replace(/[:.]/g, '-');
+          const filename = `${categoryName}_${timestamp}_${index + 1}.png`;
+          zip.file(filename, base64Data, { base64: true });
+        }
+      });
+
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${categoryName}_screenshots.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('下载截图失败:', error);
+      alert('下载失败，请重试');
     }
   };
 
@@ -348,6 +393,16 @@ export default function App() {
                         <div className="akshot-category-header">
                           <span className="akshot-category-icon">{category.icon}</span>
                           <span className="akshot-category-name">{category.name}</span>
+                          <button 
+                            className="akshot-category-download-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              downloadAllScreenshots(category.domain);
+                            }}
+                            title="下载该网站的所有截图"
+                          >
+                            📦 下载全部
+                          </button>
                         </div>
                         <div className="akshot-category-domain">{category.domain}</div>
                         <div className="akshot-category-meta">
@@ -369,16 +424,25 @@ export default function App() {
           // 分类截图页面
           <div className="akshot-screenshots-page">
             <div className="akshot-category-breadcrumb">
-              <button 
-                className="akshot-breadcrumb-back"
-                onClick={handleBackToCategories}
-              >
-                ← 返回分类
-              </button>
-              <span className="akshot-breadcrumb-current">
-                {websiteCategories.find(cat => cat.domain === selectedCategory)?.icon} 
-                {websiteCategories.find(cat => cat.domain === selectedCategory)?.name}
-              </span>
+              <div className="akshot-breadcrumb-left">
+                <button 
+                  className="akshot-breadcrumb-back"
+                  onClick={() => setCurrentView('categories')}
+                >
+                  ← 返回分类
+                </button>
+                <div className="akshot-breadcrumb-current">
+                  📸 {websiteCategories.find(cat => cat.domain === selectedCategory)?.name || selectedCategory}
+                </div>
+              </div>
+              <div className="akshot-breadcrumb-right">
+                <button 
+                  className="akshot-download-all-btn"
+                  onClick={() => downloadAllScreenshots(selectedCategory)}
+                >
+                  📦 下载全部
+                </button>
+              </div>
             </div>
             
             <div className="akshot-screenshots-grid">

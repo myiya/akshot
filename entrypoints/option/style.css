@@ -162,8 +162,42 @@
 .akshot-category-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin-bottom: 8px;
+}
+
+.akshot-category-download-btn {
+  background: rgba(52, 199, 89, 0.8);
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  color: white;
+  padding: 0 6px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.akshot-category-card:hover .akshot-category-download-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.akshot-category-download-btn:hover {
+  background: rgba(52, 199, 89, 1);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.4);
+}
+
+.akshot-category-download-btn:active {
+  transform: scale(0.95);
 }
 
 .akshot-category-icon {
@@ -199,9 +233,21 @@
 .akshot-category-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   margin-bottom: 24px;
   padding: 12px 0;
+}
+
+.akshot-breadcrumb-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.akshot-breadcrumb-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .akshot-breadcrumb-back {
@@ -219,6 +265,32 @@
 .akshot-breadcrumb-back:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateX(-2px);
+}
+
+.akshot-download-all-btn {
+  background: rgba(52, 199, 89, 0.8);
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.akshot-download-all-btn:hover {
+  background: rgba(52, 199, 89, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+}
+
+.akshot-download-all-btn:active {
+  transform: translateY(0);
 }
 
 .akshot-breadcrumb-current {

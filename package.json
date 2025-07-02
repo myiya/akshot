@@ -15,9 +15,11 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@types/jszip": "^3.4.1",
     "@webext-core/messaging": "^2.3.0",
     "idb": "^8.0.3",
     "js-web-screen-shot": "1.9.9-rc.27",
+    "jszip": "^3.10.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwindcss": "^4.0.9"
