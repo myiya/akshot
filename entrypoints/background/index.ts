@@ -86,13 +86,20 @@ export default defineBackground(() => {
     }
   });
 
-  // 监听打开 options 页面的请求
-  onMessage('open-options-page', async () => {
+  // 监听打开选项页面的请求
+  onMessage('open-options-page', async ({ data, sender }) => {
     try {
-      await browser.runtime.openOptionsPage();
+      console.log('Background received open-options-page message:', data);
+      
+      // 如果有图片ID，通过URL参数传递
+      if (data.payload?.screenshotId) {
+        const optionsUrl = browser.runtime.getURL('/option.html') + `?screenshotId=${data.payload.screenshotId}`;
+        await browser.tabs.create({ url: optionsUrl });
+      } else {
+        await browser.runtime.openOptionsPage();
+      }
     } catch (error) {
       console.error('Failed to open options page:', error);
-      throw error;
     }
   });
 });

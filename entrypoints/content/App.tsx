@@ -278,9 +278,10 @@ export default () => {
                         className="akshot-card-detail-btn"
                         onClick={async () => {
                           try {
-                            // 通过 background script 打开 options 页面
+                            // 通过 background script 打开 options 页面，并传递图片ID
                             await sendMessage('open-options-page', {
-                              type: 'OPEN_OPTIONS_PAGE'
+                              type: 'OPEN_OPTIONS_PAGE',
+                              payload: { screenshotId: shot.id }
                             });
                           } catch (error) {
                             console.error('Failed to open options page:', error);

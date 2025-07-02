@@ -58,7 +58,7 @@ interface MessagingProtocol {
    * @description 打开选项页面
    * @param message 包含打开选项页面的请求
    */
-  'open-options-page'(message: { type: MessageType }): Promise<void>;
+  'open-options-page'(message: { type: MessageType; payload?: { screenshotId?: string } }): Promise<void>;
 }
 
 // 创建消息服务
