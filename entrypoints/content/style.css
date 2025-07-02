@@ -166,13 +166,16 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  padding: 8px;
 }
 
 .akshot-card-image-container:hover .akshot-card-overlay {
@@ -180,29 +183,40 @@ body {
 }
 
 .akshot-card-view-btn,
+.akshot-card-download-btn,
+.akshot-card-detail-btn,
 .akshot-card-delete-btn {
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-size: 14px;
   transition: all 0.2s ease;
-  font-size: 16px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
 .akshot-card-view-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: rgba(59, 130, 246, 0.9);
+  transform: scale(1.1);
+}
+
+.akshot-card-download-btn:hover {
+  background: rgba(34, 197, 94, 0.9);
+  transform: scale(1.1);
+}
+
+.akshot-card-detail-btn:hover {
+  background: rgba(168, 85, 247, 0.9);
   transform: scale(1.1);
 }
 
 .akshot-card-delete-btn:hover {
-  background: rgba(220, 53, 69, 0.9);
-  color: white;
+  background: rgba(239, 68, 68, 0.9);
   transform: scale(1.1);
 }
 

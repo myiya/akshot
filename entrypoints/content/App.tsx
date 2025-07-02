@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
-import { onMessage, sendMessage } from "@/messaging";
-import ScreenShot from "js-web-screen-shot";
+import React, { useState, useEffect } from 'react';
+import { onMessage, sendMessage } from '@/messaging';
+import ScreenShot from 'js-web-screen-shot';
 import './style.css';
+
+// 声明 chrome API 类型
+declare const chrome: any;
 
 // 添加调试日志
 console.log("Content script component initialized");
@@ -222,18 +225,67 @@ export default () => {
                 <div key={`${shot.timestamp}-${index}`} className="akshot-screenshot-card">
                   <div className="akshot-card-image-container">
                     <img 
-                      src={shot.dataUrl || shot.imageData} 
+                      src={shot.imageData} 
                       alt="Screenshot" 
                       className="akshot-card-image"
-                      onClick={() => window.open(shot.dataUrl || shot.imageData, '_blank')}
+                      onClick={() => {
+                        // 将 base64 转换为 Blob URL
+                        const byteCharacters = atob(shot.imageData.split(',')[1]);
+                        const byteNumbers = new Array(byteCharacters.length);
+                        for (let i = 0; i < byteCharacters.length; i++) {
+                          byteNumbers[i] = byteCharacters.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        const blob = new Blob([byteArray], { type: 'image/png' });
+                        const blobUrl = URL.createObjectURL(blob);
+                        window.open(blobUrl, '_blank');
+                      }}
                     />
                     <div className="akshot-card-overlay">
                       <button 
                         className="akshot-card-view-btn"
-                        onClick={() => window.open(shot.dataUrl || shot.imageData, '_blank')}
+                        onClick={() => {
+                          // 将 base64 转换为 Blob URL
+                          const byteCharacters = atob(shot.imageData.split(',')[1]);
+                          const byteNumbers = new Array(byteCharacters.length);
+                          for (let i = 0; i < byteCharacters.length; i++) {
+                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                          }
+                          const byteArray = new Uint8Array(byteNumbers);
+                          const blob = new Blob([byteArray], { type: 'image/png' });
+                          const blobUrl = URL.createObjectURL(blob);
+                          window.open(blobUrl, '_blank');
+                        }}
                         title="查看大图"
                       >
                         🔍
+                      </button>
+                      <button 
+                        className="akshot-card-download-btn"
+                        onClick={() => {
+                          const link = document.createElement('a');
+                          link.href = shot.imageData;
+                          link.download = `screenshot-${new Date(shot.timestamp).toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        title="下载截图"
+                      >
+                        💾
+                      </button>
+                      <button 
+                        className="akshot-card-detail-btn"
+                        onClick={() => {
+                          if (typeof chrome !== 'undefined' && chrome.runtime) {
+                            chrome.runtime.openOptionsPage();
+                          } else {
+                            console.warn('Chrome runtime API not available');
+                          }
+                        }}
+                        title="查看详细信息"
+                      >
+                        📋
                       </button>
                       <button 
                         className="akshot-card-delete-btn"
