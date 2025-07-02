@@ -85,6 +85,16 @@ export default defineBackground(() => {
       throw error;
     }
   });
+
+  // 监听打开 options 页面的请求
+  onMessage('open-options-page', async () => {
+    try {
+      await browser.runtime.openOptionsPage();
+    } catch (error) {
+      console.error('Failed to open options page:', error);
+      throw error;
+    }
+  });
 });
 
 async function downloadImage(dataUrl: string): Promise<void> {

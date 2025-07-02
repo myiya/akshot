@@ -8,7 +8,8 @@ export type MessageType =
   | 'GET_SCREENSHOTS'
   | 'GET_ALL_SCREENSHOTS'
   | 'DELETE_SCREENSHOT'
-  | 'CLEAR_SCREENSHOTS_BY_URL';
+  | 'CLEAR_SCREENSHOTS_BY_URL'
+  | 'OPEN_OPTIONS_PAGE';
 
 // 定义消息接口
 export interface Message {

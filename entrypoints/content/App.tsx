@@ -276,11 +276,14 @@ export default () => {
                       </button>
                       <button 
                         className="akshot-card-detail-btn"
-                        onClick={() => {
-                          if (typeof chrome !== 'undefined' && chrome.runtime) {
-                            chrome.runtime.openOptionsPage();
-                          } else {
-                            console.warn('Chrome runtime API not available');
+                        onClick={async () => {
+                          try {
+                            // 通过 background script 打开 options 页面
+                            await sendMessage('open-options-page', {
+                              type: 'OPEN_OPTIONS_PAGE'
+                            });
+                          } catch (error) {
+                            console.error('Failed to open options page:', error);
                           }
                         }}
                         title="查看详细信息"
