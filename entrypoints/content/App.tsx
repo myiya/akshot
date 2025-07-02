@@ -6,13 +6,85 @@ import './style.css';
 // 添加调试日志
 console.log("Content script component initialized");
 
+// 网站分类接口
+interface WebsiteCategory {
+  domain: string;
+  name: string;
+  icon: string;
+  count: number;
+  screenshots: any[];
+}
+
+// 从URL提取域名
+const getDomainFromUrl = (url: string): string => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname;
+  } catch {
+    return 'unknown';
+  }
+};
+
+// 获取网站图标
+const getWebsiteIcon = (domain: string): string => {
+  const iconMap: { [key: string]: string } = {
+    'baidu.com': '🔍',
+    'google.com': '🌐',
+    'github.com': '🐙',
+    'stackoverflow.com': '📚',
+    'youtube.com': '📺',
+    'twitter.com': '🐦',
+    'facebook.com': '📘',
+    'linkedin.com': '💼',
+    'instagram.com': '📷',
+    'reddit.com': '🤖',
+    'wikipedia.org': '📖',
+    'amazon.com': '🛒',
+    'netflix.com': '🎬',
+    'spotify.com': '🎵',
+    'default': '🌍'
+  };
+  
+  for (const [key, icon] of Object.entries(iconMap)) {
+    if (domain.includes(key)) return icon;
+  }
+  return iconMap.default;
+};
+
+// 获取网站名称
+const getWebsiteName = (domain: string): string => {
+  const nameMap: { [key: string]: string } = {
+    'baidu.com': '百度',
+    'google.com': 'Google',
+    'github.com': 'GitHub',
+    'stackoverflow.com': 'Stack Overflow',
+    'youtube.com': 'YouTube',
+    'twitter.com': 'Twitter',
+    'facebook.com': 'Facebook',
+    'linkedin.com': 'LinkedIn',
+    'instagram.com': 'Instagram',
+    'reddit.com': 'Reddit',
+    'wikipedia.org': 'Wikipedia',
+    'amazon.com': 'Amazon',
+    'netflix.com': 'Netflix',
+    'spotify.com': 'Spotify'
+  };
+  
+  for (const [key, name] of Object.entries(nameMap)) {
+    if (domain.includes(key)) return name;
+  }
+  return domain;
+};
+
 export default () => {
   const [screenshots, setScreenshots] = useState<any[]>([]);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [activeTab, setActiveTab] = useState<'current' | 'all'>('current'); // 标签页状态
-  const currentUrl = window.location.href.split("#")[0].split("?")[0]; // 获取基本URL，不包含查询参数和锚点
+  const [activeTab, setActiveTab] = useState<'current' | 'all'>('current');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [websiteCategories, setWebsiteCategories] = useState<WebsiteCategory[]>([]);
+  const currentUrl = window.location.href.split("#")[0].split("?")[0];
 
-  // 加载截图（根据当前标签页）
+  // 加载截图并分类
   const loadScreenshots = async () => {
     try {
       let shots;
@@ -26,16 +98,57 @@ export default () => {
           type: 'GET_ALL_SCREENSHOTS'
         });
       }
+      
+      // 按网站分类
+      const categoryMap = new Map<string, WebsiteCategory>();
+      
+      shots.forEach((shot: any) => {
+        const domain = getDomainFromUrl(shot.originalUrl || shot.url || '');
+        
+        if (!categoryMap.has(domain)) {
+          categoryMap.set(domain, {
+            domain,
+            name: getWebsiteName(domain),
+            icon: getWebsiteIcon(domain),
+            count: 0,
+            screenshots: []
+          });
+        }
+        
+        const category = categoryMap.get(domain)!;
+        category.count++;
+        category.screenshots.push(shot);
+      });
+      
+      const categories = Array.from(categoryMap.values()).sort((a, b) => b.count - a.count);
+      setWebsiteCategories(categories);
       setScreenshots(shots);
-      console.log(`Loaded ${activeTab} screenshots:`, shots.length);
+      
+      console.log(`Loaded ${activeTab} screenshots:`, shots.length, 'categories:', categories.length);
     } catch (error) {
       console.error("Failed to load screenshots:", error);
     }
   };
 
+  // 获取过滤后的截图
+  const getFilteredScreenshots = () => {
+    if (selectedCategory === 'all') {
+      return screenshots;
+    }
+    
+    const category = websiteCategories.find(cat => cat.domain === selectedCategory);
+    return category ? category.screenshots : [];
+  };
+
   // 切换标签页
   const handleTabChange = (tab: 'current' | 'all') => {
     setActiveTab(tab);
+    setSelectedCategory('all'); // 重置分类选择
+  };
+  
+  // 选择网站分类
+  const handleCategorySelect = (domain: string) => {
+    setSelectedCategory(domain);
   };
 
   // 删除截图
@@ -170,68 +283,132 @@ export default () => {
           </button>
         </div>
         
-        {/* Screenshots Container */}
-        <div className="akshot-screenshots-container">
-          {screenshots.length === 0 ? (
-            <div className="akshot-empty-state">
-              <div className="akshot-empty-icon">
-                <span className="akshot-empty-emoji">📷</span>
+        {/* Main Content Area */}
+        <div className="akshot-main-content">
+          {/* Website Category Sidebar */}
+          {activeTab === 'all' && websiteCategories.length > 0 && (
+            <div className="akshot-category-sidebar">
+              <div className="akshot-category-header">
+                <h3>网站分类</h3>
               </div>
-              <p className="akshot-empty-title">暂无截图</p>
-              <p className="akshot-empty-subtitle">开始截图来查看历史记录</p>
-            </div>
-          ) : (
-            screenshots.map((shot) => (
-              <div key={shot.id} className="akshot-screenshot-item">
-                {/* Time and URL Info */}
-                <div className="akshot-screenshot-header">
-                  <div className="akshot-screenshot-time">
-                    <span>🕒</span>
-                    <span>{new Date(shot.timestamp).toLocaleString()}</span>
-                  </div>
-                  {shot.originalUrl && (
-                    <div className="akshot-screenshot-url-container">
-                      <span className="akshot-screenshot-url-icon">🔗</span>
-                      <a 
-                        href={shot.originalUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="akshot-screenshot-url-link"
-                      >
-                        {shot.originalUrl}
-                      </a>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Screenshot Image */}
-                <div className="akshot-screenshot-image-wrapper">
-                  <img 
-                    src={shot.imageData} 
-                    alt="Screenshot" 
-                    className="akshot-screenshot-image"
-                    onClick={() => window.open(shot.imageData, "_blank")}
-                  />
-                  <div className="akshot-screenshot-overlay">
-                    <span className="akshot-screenshot-overlay-text">
-                      点击查看大图
-                    </span>
-                  </div>
-                </div>
-                
-                {/* Actions */}
-                <div className="akshot-screenshot-actions">
+              <div className="akshot-category-list">
+                <button 
+                  className={`akshot-category-item ${selectedCategory === 'all' ? 'akshot-category-active' : ''}`}
+                  onClick={() => handleCategorySelect('all')}
+                >
+                  <span className="akshot-category-icon">🌐</span>
+                  <span className="akshot-category-name">全部网站</span>
+                  <span className="akshot-category-count">{screenshots.length}</span>
+                </button>
+                {websiteCategories.map((category) => (
                   <button 
-                    onClick={() => handleDeleteScreenshot(shot.id)}
-                    className="akshot-screenshot-delete-button"
+                    key={category.domain}
+                    className={`akshot-category-item ${selectedCategory === category.domain ? 'akshot-category-active' : ''}`}
+                    onClick={() => handleCategorySelect(category.domain)}
                   >
-                    <span>🗑️</span>
-                    <span>删除</span>
+                    <span className="akshot-category-icon">{category.icon}</span>
+                    <span className="akshot-category-name">{category.name}</span>
+                    <span className="akshot-category-count">{category.count}</span>
                   </button>
-                </div>
+                ))}
               </div>
-            ))
+            </div>
           )}
+
+          {/* Screenshots Content Area */}
+          <div className="akshot-content-area">
+            {selectedCategory !== 'all' && (
+              <div className="akshot-category-breadcrumb">
+                <button 
+                  className="akshot-breadcrumb-back"
+                  onClick={() => handleCategorySelect('all')}
+                >
+                  ← 返回全部
+                </button>
+                <span className="akshot-breadcrumb-current">
+                  {websiteCategories.find(cat => cat.domain === selectedCategory)?.icon} 
+                  {websiteCategories.find(cat => cat.domain === selectedCategory)?.name}
+                </span>
+              </div>
+            )}
+            
+            <div className="akshot-screenshots-grid">
+              {getFilteredScreenshots().length === 0 ? (
+                <div className="akshot-empty-state">
+                  <div className="akshot-empty-icon">
+                    <span className="akshot-empty-emoji">📷</span>
+                  </div>
+                  <div className="akshot-empty-text">
+                    <h3 className="akshot-empty-title">暂无截图</h3>
+                    <p className="akshot-empty-subtitle">
+                      {activeTab === 'current' 
+                        ? '当前页面还没有截图' 
+                        : selectedCategory === 'all' 
+                          ? '还没有保存任何截图'
+                          : '该网站还没有截图'}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                getFilteredScreenshots().map((shot, index) => (
+                  <div key={`${shot.timestamp}-${index}`} className="akshot-screenshot-card">
+                    <div className="akshot-card-image-container">
+                      <img 
+                        src={shot.dataUrl || shot.imageData} 
+                        alt="Screenshot" 
+                        className="akshot-card-image"
+                        onClick={() => window.open(shot.dataUrl || shot.imageData, '_blank')}
+                      />
+                      <div className="akshot-card-overlay">
+                        <button 
+                          className="akshot-card-view-btn"
+                          onClick={() => window.open(shot.dataUrl || shot.imageData, '_blank')}
+                          title="查看大图"
+                        >
+                          🔍
+                        </button>
+                        <button 
+                          className="akshot-card-delete-btn"
+                          onClick={() => {
+                            if (shot.id) {
+                              deleteScreenshot(shot.id);
+                            }
+                          }}
+                          title="删除截图"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                    <div className="akshot-card-info">
+                      <div className="akshot-card-website">
+                        <span className="akshot-card-website-icon">
+                          {getWebsiteIcon(getDomainFromUrl(shot.originalUrl || shot.url || ''))}
+                        </span>
+                        <span className="akshot-card-website-name">
+                          {getWebsiteName(getDomainFromUrl(shot.originalUrl || shot.url || ''))}
+                        </span>
+                      </div>
+                      <div className="akshot-card-url" title={shot.originalUrl || shot.url}>
+                        {(shot.originalUrl || shot.url || '').length > 40 
+                          ? (shot.originalUrl || shot.url || '').substring(0, 40) + '...' 
+                          : (shot.originalUrl || shot.url || '')}
+                      </div>
+                      <div className="akshot-card-time">
+                        {new Date(shot.timestamp).toLocaleString('zh-CN', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
