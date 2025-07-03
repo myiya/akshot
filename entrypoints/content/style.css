@@ -143,6 +143,9 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid #f1f3f4;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
 }
 
 .akshot-screenshot-card:hover {
@@ -155,9 +158,10 @@ body {
 .akshot-card-image-container {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 200px;
   overflow: hidden;
   background: #f8f9fa;
+  flex-shrink: 0;
 }
 
 .akshot-card-image {
@@ -239,6 +243,11 @@ body {
 /* 卡片信息区域 */
 .akshot-card-info {
   padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
 }
 
 .akshot-card-website {
