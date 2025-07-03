@@ -167,35 +167,72 @@
   margin-bottom: 8px;
 }
 
+/* 分类操作按钮组 */
+.akshot-category-actions {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+}
+
+.akshot-category-card:hover .akshot-category-actions {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.akshot-category-detail-btn,
 .akshot-category-download-btn {
-  background: rgba(52, 199, 89, 0.8);
-  border: 1px solid rgba(52, 199, 89, 0.3);
+  border: none;
   color: white;
-  padding: 0 6px;
+  padding: 0 8px;
   height: 28px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
-  opacity: 0;
-  transform: scale(0.8);
+  font-weight: 500;
 }
 
-.akshot-category-card:hover .akshot-category-download-btn {
-  opacity: 1;
-  transform: scale(1);
+.akshot-category-detail-btn {
+  background: rgba(0, 122, 255, 0.8);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+}
+
+.akshot-category-detail-btn:hover {
+  background: rgba(0, 122, 255, 1);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
+}
+
+.akshot-category-detail-btn:disabled {
+  background: rgba(128, 128, 128, 0.5);
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.akshot-category-detail-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.akshot-category-download-btn {
+  background: rgba(52, 199, 89, 0.8);
+  border: 1px solid rgba(52, 199, 89, 0.3);
 }
 
 .akshot-category-download-btn:hover {
   background: rgba(52, 199, 89, 1);
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 0 2px 8px rgba(52, 199, 89, 0.4);
 }
 
+.akshot-category-detail-btn:active,
 .akshot-category-download-btn:active {
   transform: scale(0.95);
 }
@@ -399,6 +436,275 @@
   padding: 12px;
 }
 
+/* 详情页样式 */
+.akshot-detail-page {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.akshot-detail-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.akshot-detail-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 24px;
+}
+
+/* 详情页左侧 */
+.akshot-detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.akshot-detail-image-container {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.akshot-detail-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.akshot-detail-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.akshot-detail-image-container:hover .akshot-detail-image-overlay {
+  opacity: 1;
+}
+
+.akshot-detail-fullscreen-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.akshot-detail-fullscreen-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.akshot-detail-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.akshot-detail-action-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.akshot-detail-view-btn {
+  background: rgba(0, 122, 255, 0.8);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+}
+
+.akshot-detail-view-btn:hover {
+  background: rgba(0, 122, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.akshot-detail-download-btn {
+  background: rgba(52, 199, 89, 0.8);
+  border: 1px solid rgba(52, 199, 89, 0.3);
+}
+
+.akshot-detail-download-btn:hover {
+  background: rgba(52, 199, 89, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+}
+
+.akshot-detail-delete-btn {
+  background: rgba(255, 59, 48, 0.8);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.akshot-detail-delete-btn:hover {
+  background: rgba(255, 59, 48, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+}
+
+.akshot-detail-action-btn:active {
+  transform: translateY(0);
+}
+
+/* 详情页右侧 */
+.akshot-detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.akshot-detail-website-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.akshot-detail-website-icon {
+  font-size: 32px;
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.akshot-detail-website-info {
+  flex: 1;
+}
+
+.akshot-detail-website-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 4px 0;
+}
+
+.akshot-detail-website-domain {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.akshot-detail-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.akshot-detail-info-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.akshot-detail-info-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.akshot-detail-info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.akshot-detail-info-card-icon {
+  font-size: 16px;
+}
+
+.akshot-detail-info-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.akshot-detail-info-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.akshot-detail-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.akshot-detail-info-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+}
+
+.akshot-detail-info-value {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.akshot-detail-url a {
+  color: rgba(0, 122, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.akshot-detail-url a:hover {
+  color: rgba(0, 122, 255, 1);
+  text-decoration: underline;
+}
+
+.akshot-detail-id {
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
 .akshot-card-website {
   display: flex;
   align-items: center;
@@ -496,5 +802,48 @@
   
   .akshot-header-title {
     font-size: 1.5rem;
+  }
+  
+  /* 详情页响应式 */
+  .akshot-detail-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .akshot-detail-breadcrumb {
+    padding: 12px 16px;
+  }
+  
+  .akshot-detail-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .akshot-detail-website-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .akshot-detail-website-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  
+  .akshot-detail-website-name {
+    font-size: 1.25rem;
+  }
+  
+  .akshot-category-actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .akshot-category-detail-btn,
+  .akshot-category-download-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

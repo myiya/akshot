@@ -257,88 +257,180 @@ export default function App() {
             
             {selectedScreenshot && (
               <div className="akshot-detail-content">
-                <div className="akshot-detail-image-section">
-                  <img 
-                    src={selectedScreenshot.imageData} 
-                    alt="Screenshot Detail" 
-                    className="akshot-detail-image"
-                  />
-                  <div className="akshot-detail-actions">
-                    <button 
-                      className="akshot-detail-action-btn akshot-detail-view-btn"
-                      onClick={() => {
-                        const base64Data = selectedScreenshot.imageData;
-                        const byteCharacters = atob(base64Data.split(',')[1]);
-                        const byteNumbers = new Array(byteCharacters.length);
-                        for (let i = 0; i < byteCharacters.length; i++) {
-                          byteNumbers[i] = byteCharacters.charCodeAt(i);
-                        }
-                        const byteArray = new Uint8Array(byteNumbers);
-                        const blob = new Blob([byteArray], { type: 'image/png' });
-                        const blobUrl = URL.createObjectURL(blob);
-                        window.open(blobUrl, '_blank');
-                      }}
-                      title="查看大图"
-                    >
-                      🔍 查看大图
-                    </button>
-                    <button 
-                      className="akshot-detail-action-btn akshot-detail-delete-btn"
-                      onClick={() => {
-                        if (selectedScreenshot.id) {
-                          deleteScreenshot(selectedScreenshot.id);
-                          handleBackToCategories();
-                        }
-                      }}
-                      title="删除截图"
-                    >
-                      🗑️ 删除
-                    </button>
+                <div className="akshot-detail-left">
+                  <div className="akshot-detail-image-section">
+                    <div className="akshot-detail-image-container">
+                      <img 
+                        src={selectedScreenshot.imageData} 
+                        alt="Screenshot Detail" 
+                        className="akshot-detail-image"
+                      />
+                      <div className="akshot-detail-image-overlay">
+                        <button 
+                          className="akshot-detail-fullscreen-btn"
+                          onClick={() => {
+                            const base64Data = selectedScreenshot.imageData;
+                            const byteCharacters = atob(base64Data.split(',')[1]);
+                            const byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                              byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: 'image/png' });
+                            const blobUrl = URL.createObjectURL(blob);
+                            window.open(blobUrl, '_blank');
+                          }}
+                          title="全屏查看"
+                        >
+                          🔍
+                        </button>
+                      </div>
+                    </div>
+                    <div className="akshot-detail-actions">
+                      <button 
+                        className="akshot-detail-action-btn akshot-detail-view-btn"
+                        onClick={() => {
+                          const base64Data = selectedScreenshot.imageData;
+                          const byteCharacters = atob(base64Data.split(',')[1]);
+                          const byteNumbers = new Array(byteCharacters.length);
+                          for (let i = 0; i < byteCharacters.length; i++) {
+                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                          }
+                          const byteArray = new Uint8Array(byteNumbers);
+                          const blob = new Blob([byteArray], { type: 'image/png' });
+                          const blobUrl = URL.createObjectURL(blob);
+                          window.open(blobUrl, '_blank');
+                        }}
+                        title="查看大图"
+                      >
+                        🔍 查看大图
+                      </button>
+                      <button 
+                        className="akshot-detail-action-btn akshot-detail-download-btn"
+                        onClick={() => {
+                          const link = document.createElement('a');
+                          link.href = selectedScreenshot.imageData;
+                          link.download = `screenshot-${selectedScreenshot.id || Date.now()}.png`;
+                          link.click();
+                        }}
+                        title="下载图片"
+                      >
+                        📥 下载图片
+                      </button>
+                      <button 
+                        className="akshot-detail-action-btn akshot-detail-delete-btn"
+                        onClick={() => {
+                          if (selectedScreenshot.id && confirm('确定要删除这张截图吗？')) {
+                            deleteScreenshot(selectedScreenshot.id);
+                            handleBackToCategories();
+                          }
+                        }}
+                        title="删除截图"
+                      >
+                        🗑️ 删除
+                      </button>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="akshot-detail-info-section">
-                  <div className="akshot-detail-info-card">
-                    <h3>网站信息</h3>
-                    <div className="akshot-detail-info-item">
-                      <span className="akshot-detail-info-label">网站名称:</span>
-                      <span className="akshot-detail-info-value">
-                        {getWebsiteIcon(getDomainFromUrl(selectedScreenshot.originalUrl || selectedScreenshot.url || ''))} 
-                        {getWebsiteName(getDomainFromUrl(selectedScreenshot.originalUrl || selectedScreenshot.url || ''))}
+                <div className="akshot-detail-right">
+                  <div className="akshot-detail-info-section">
+                    <div className="akshot-detail-website-header">
+                      <span className="akshot-detail-website-icon">
+                        {getWebsiteIcon(getDomainFromUrl(selectedScreenshot.originalUrl || selectedScreenshot.url || ''))}
                       </span>
+                      <div className="akshot-detail-website-info">
+                        <h3 className="akshot-detail-website-name">
+                          {getWebsiteName(getDomainFromUrl(selectedScreenshot.originalUrl || selectedScreenshot.url || ''))}
+                        </h3>
+                        <p className="akshot-detail-website-domain">
+                          {getDomainFromUrl(selectedScreenshot.originalUrl || selectedScreenshot.url || '')}
+                        </p>
+                      </div>
                     </div>
-                    <div className="akshot-detail-info-item">
-                      <span className="akshot-detail-info-label">域名:</span>
-                      <span className="akshot-detail-info-value">
-                        {getDomainFromUrl(selectedScreenshot.originalUrl || selectedScreenshot.url || '')}
-                      </span>
-                    </div>
-                    <div className="akshot-detail-info-item">
-                      <span className="akshot-detail-info-label">完整URL:</span>
-                      <span className="akshot-detail-info-value akshot-detail-url">
-                        <a href={selectedScreenshot.originalUrl || selectedScreenshot.url} target="_blank" rel="noopener noreferrer">
-                          {selectedScreenshot.originalUrl || selectedScreenshot.url}
-                        </a>
-                      </span>
-                    </div>
-                    <div className="akshot-detail-info-item">
-                      <span className="akshot-detail-info-label">截图时间:</span>
-                      <span className="akshot-detail-info-value">
-                        {new Date(selectedScreenshot.timestamp).toLocaleString('zh-CN', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit'
-                        })}
-                      </span>
-                    </div>
-                    <div className="akshot-detail-info-item">
-                      <span className="akshot-detail-info-label">图片ID:</span>
-                      <span className="akshot-detail-info-value akshot-detail-id">
-                        {selectedScreenshot.id}
-                      </span>
+                    
+                    <div className="akshot-detail-info-grid">
+                      <div className="akshot-detail-info-card">
+                        <div className="akshot-detail-info-card-header">
+                          <span className="akshot-detail-info-card-icon">🔗</span>
+                          <span className="akshot-detail-info-card-title">页面信息</span>
+                        </div>
+                        <div className="akshot-detail-info-item">
+                          <span className="akshot-detail-info-label">完整URL:</span>
+                          <span className="akshot-detail-info-value akshot-detail-url">
+                            <a href={selectedScreenshot.originalUrl || selectedScreenshot.url} target="_blank" rel="noopener noreferrer">
+                              {selectedScreenshot.originalUrl || selectedScreenshot.url}
+                            </a>
+                          </span>
+                        </div>
+                        <div className="akshot-detail-info-item">
+                          <span className="akshot-detail-info-label">页面标题:</span>
+                          <span className="akshot-detail-info-value">
+                            {selectedScreenshot.title || '未知'}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="akshot-detail-info-card">
+                        <div className="akshot-detail-info-card-header">
+                          <span className="akshot-detail-info-card-icon">⏰</span>
+                          <span className="akshot-detail-info-card-title">时间信息</span>
+                        </div>
+                        <div className="akshot-detail-info-item">
+                          <span className="akshot-detail-info-label">截图时间:</span>
+                          <span className="akshot-detail-info-value">
+                            {new Date(selectedScreenshot.timestamp).toLocaleString('zh-CN', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              second: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        <div className="akshot-detail-info-item">
+                          <span className="akshot-detail-info-label">相对时间:</span>
+                          <span className="akshot-detail-info-value">
+                            {(() => {
+                              const now = Date.now();
+                              const diff = now - selectedScreenshot.timestamp;
+                              const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                              const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                              const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                              
+                              if (days > 0) return `${days}天前`;
+                              if (hours > 0) return `${hours}小时前`;
+                              if (minutes > 0) return `${minutes}分钟前`;
+                              return '刚刚';
+                            })()} 
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="akshot-detail-info-card">
+                        <div className="akshot-detail-info-card-header">
+                          <span className="akshot-detail-info-card-icon">📊</span>
+                          <span className="akshot-detail-info-card-title">技术信息</span>
+                        </div>
+                        <div className="akshot-detail-info-item">
+                          <span className="akshot-detail-info-label">图片ID:</span>
+                          <span className="akshot-detail-info-value akshot-detail-id">
+                            {selectedScreenshot.id}
+                          </span>
+                        </div>
+                        <div className="akshot-detail-info-item">
+                          <span className="akshot-detail-info-label">图片大小:</span>
+                          <span className="akshot-detail-info-value">
+                            {(() => {
+                              const sizeInBytes = Math.round((selectedScreenshot.imageData.length * 3) / 4);
+                              if (sizeInBytes < 1024) return `${sizeInBytes} B`;
+                              if (sizeInBytes < 1024 * 1024) return `${(sizeInBytes / 1024).toFixed(1)} KB`;
+                              return `${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB`;
+                            })()} 
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -393,16 +485,32 @@ export default function App() {
                         <div className="akshot-category-header">
                           <span className="akshot-category-icon">{category.icon}</span>
                           <span className="akshot-category-name">{category.name}</span>
-                          <button 
-                            className="akshot-category-download-btn"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              downloadAllScreenshots(category.domain);
-                            }}
-                            title="下载该网站的所有截图"
-                          >
-                            📦 下载全部
-                          </button>
+                          <div className="akshot-category-actions">
+                            <button 
+                              className="akshot-category-detail-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (latestScreenshot) {
+                                  setSelectedScreenshot(latestScreenshot);
+                                  setCurrentView('detail');
+                                }
+                              }}
+                              title="查看详情"
+                              disabled={!latestScreenshot}
+                            >
+                              📋 详情
+                            </button>
+                            <button 
+                              className="akshot-category-download-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                downloadAllScreenshots(category.domain);
+                              }}
+                              title="下载该网站的所有截图"
+                            >
+                              📦 下载全部
+                            </button>
+                          </div>
                         </div>
                         <div className="akshot-category-domain">{category.domain}</div>
                         <div className="akshot-category-meta">
@@ -469,7 +577,18 @@ export default function App() {
                       <div className="akshot-card-overlay">
                         <button 
                           className="akshot-card-view-btn"
-                          onClick={() => window.open(shot.dataUrl || shot.imageData, '_blank')}
+                          onClick={() => {
+                            // 将 base64 转换为 Blob URL
+                            const byteCharacters = atob(shot.imageData.split(',')[1]);
+                            const byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                              byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: 'image/png' });
+                            const blobUrl = URL.createObjectURL(blob);
+                            window.open(blobUrl, '_blank');
+                          }}
                           title="查看大图"
                         >
                           🔍
