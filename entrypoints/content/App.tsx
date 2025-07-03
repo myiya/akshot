@@ -258,35 +258,35 @@ export default () => {
   };
 
   // 添加全局鼠标事件监听
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+  // useEffect(() => {
+  //   if (isDragging) {
+  //     document.addEventListener('mousemove', handleMouseMove);
+  //     document.addEventListener('mouseup', handleMouseUp);
       
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-    }
-  }, [isDragging, dragOffset, showSidebar]);
+  //     return () => {
+  //       document.removeEventListener('mousemove', handleMouseMove);
+  //       document.removeEventListener('mouseup', handleMouseUp);
+  //     };
+  //   }
+  // }, [isDragging, dragOffset, showSidebar]);
 
   // 监听窗口大小变化，调整按钮位置
-  useEffect(() => {
-    const handleResize = () => {
-      const buttonSize = 50;
-      const margin = 20;
-      const maxX = window.innerWidth - buttonSize;
-      const maxY = window.innerHeight - buttonSize;
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     const buttonSize = 50;
+  //     const margin = 20;
+  //     const maxX = window.innerWidth - buttonSize;
+  //     const maxY = window.innerHeight - buttonSize;
       
-      setButtonPosition(prev => ({
-        x: Math.max(0, Math.min(prev.x, maxX)),
-        y: Math.max(0, Math.min(prev.y, maxY))
-      }));
-    };
+  //     setButtonPosition(prev => ({
+  //       x: Math.max(0, Math.min(prev.x, maxX)),
+  //       y: Math.max(0, Math.min(prev.y, maxY))
+  //     }));
+  //   };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  //   window.addEventListener('resize', handleResize);
+  //   return () => window.removeEventListener('resize', handleResize);
+  // }, []);
 
   return (
     <div>
