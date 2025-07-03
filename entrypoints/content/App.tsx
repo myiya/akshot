@@ -146,7 +146,7 @@ export default () => {
       setTimeout(() => {
         new ScreenShot({
           enableWebRtc: false,
-          level: 99999,
+          level: 2147483637,
           completeCallback: async ({ base64, cutInfo }) => {
             console.log("Screenshot taken", cutInfo);
             try {
@@ -155,8 +155,6 @@ export default () => {
                 type: 'SAVE_SCREENSHOT',
                 payload: { url: currentUrl, imageData: base64 }
               });
-              // 重新加载截图列表
-              await loadScreenshots();
               // 显示侧边栏
               setShowSidebar(true);
             } catch (error) {
@@ -164,6 +162,8 @@ export default () => {
             } finally {
               // 截图完成后显示按钮
               setIsScreenshotting(false);
+              // 重新加载截图列表
+              await loadScreenshots();
             }
           },
           closeCallback: () => {
@@ -172,7 +172,7 @@ export default () => {
             setIsScreenshotting(false);
           },
         });
-      }, 0);
+      }, 200);
     });
 
     // 监听获取截图请求
@@ -291,7 +291,7 @@ export default () => {
   return (
     <div>
       {/* Toggle Button */}
-      {!isScreenshotting && (
+      {/* {!isScreenshotting && (
         <div 
           ref={buttonRef}
           className={`akshot-toggle-button ${isDragging ? 'akshot-dragging' : ''}`}
@@ -306,7 +306,7 @@ export default () => {
         >
           <span className="akshot-toggle-icon">📸</span>
         </div>
-      )}
+      )} */}
       
       {/* Sidebar */}
       <div className={`akshot-sidebar ${
