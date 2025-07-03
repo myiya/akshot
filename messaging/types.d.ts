@@ -9,7 +9,8 @@ export type MessageType =
   | 'GET_ALL_SCREENSHOTS'
   | 'DELETE_SCREENSHOT'
   | 'CLEAR_SCREENSHOTS_BY_URL'
-  | 'OPEN_OPTIONS_PAGE';
+  | 'OPEN_OPTIONS_PAGE'
+  | 'TOGGLE_SIDEBAR';
 
 // 定义消息接口
 export interface Message {

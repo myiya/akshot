@@ -59,6 +59,11 @@ interface MessagingProtocol {
    * @param message 包含打开选项页面的请求
    */
   'open-options-page'(message: { type: MessageType; payload?: { screenshotId?: string } }): Promise<void>;
+
+  /**
+   * @description 切换侧边栏显示状态
+   */
+  'toggle-sidebar': Message;
 }
 
 // 创建消息服务

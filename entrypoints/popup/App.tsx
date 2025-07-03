@@ -22,14 +22,32 @@ function App() {
       
       setStatus('开始截图...');
       // 关闭popup窗口
-      setTimeout(() => {
-        window.close();
-      }, 500);
+      window.close();
     } catch (error: any) {
       console.error('截图失败:', error.message || error);
       setStatus(`截图失败: ${error.message || '未知错误'}`);
     } finally {
       setIsScreenshotting(false);
+    }
+  };
+
+  // 处理打开侧边栏
+  const handleToggleSidebar = async () => {
+    try {
+      setStatus('正在打开截图历史...');
+      
+      // 发送切换侧边栏请求到content script
+      await sendMessage('toggle-sidebar', { 
+        type: 'TOGGLE_SIDEBAR', 
+        payload: { timestamp: Date.now() }
+      });
+      
+      setStatus('截图历史已打开');
+      // 关闭popup窗口
+      window.close();
+    } catch (error: any) {
+      console.error('打开侧边栏失败:', error.message || error);
+      setStatus(`打开失败: ${error.message || '未知错误'}`);
     }
   };
 
@@ -48,7 +66,7 @@ function App() {
       
       {/* Main Content */}
       <div className="p-6 space-y-6">
-        {/* Screenshot Button */}
+        {/* Action Buttons */}
         <div className="flex flex-col items-center space-y-4">
           <button 
             className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform ${
@@ -62,6 +80,17 @@ function App() {
             <div className="flex items-center justify-center space-x-2">
               <span className="text-lg">{isScreenshotting ? '⏳' : '📷'}</span>
               <span>{isScreenshotting ? '截图中...' : '开始截图'}</span>
+            </div>
+          </button>
+          
+          <button 
+            className="w-full py-3 px-6 rounded-xl font-semibold text-indigo-600 bg-white border-2 border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+            onClick={handleToggleSidebar}
+            disabled={isScreenshotting}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-lg">📋</span>
+              <span>查看截图历史</span>
             </div>
           </button>
           
@@ -91,7 +120,11 @@ function App() {
             </div>
             <div className="flex items-start space-x-2">
               <span className="text-blue-500 mt-0.5">3.</span>
-              <p>截图自动保存，点击右下角📸查看历史</p>
+              <p>点击"查看截图历史"打开侧边栏浏览</p>
+            </div>
+            <div className="flex items-start space-x-2">
+              <span className="text-blue-500 mt-0.5">4.</span>
+              <p>截图自动保存，可随时查看和管理</p>
             </div>
           </div>
         </div>

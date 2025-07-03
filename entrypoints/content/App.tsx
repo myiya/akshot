@@ -142,34 +142,37 @@ export default () => {
       // 截图开始时隐藏按钮
       setIsScreenshotting(true);
       
-      new ScreenShot({
-        enableWebRtc: false,
-        level: 99999,
-        completeCallback: async ({ base64, cutInfo }) => {
-          console.log("Screenshot taken", cutInfo);
-          try {
-            // 保存截图到IndexedDB
-            await sendMessage('save-screenshot', {
-              type: 'SAVE_SCREENSHOT',
-              payload: { url: currentUrl, imageData: base64 }
-            });
-            // 重新加载截图列表
-            await loadScreenshots();
-            // 显示侧边栏
-            setShowSidebar(true);
-          } catch (error) {
-            console.error("Failed to save screenshot:", error);
-          } finally {
-            // 截图完成后显示按钮
+      // 等待状态更新和DOM渲染完成后再执行截图
+      setTimeout(() => {
+        new ScreenShot({
+          enableWebRtc: false,
+          level: 99999,
+          completeCallback: async ({ base64, cutInfo }) => {
+            console.log("Screenshot taken", cutInfo);
+            try {
+              // 保存截图到IndexedDB
+              await sendMessage('save-screenshot', {
+                type: 'SAVE_SCREENSHOT',
+                payload: { url: currentUrl, imageData: base64 }
+              });
+              // 重新加载截图列表
+              await loadScreenshots();
+              // 显示侧边栏
+              setShowSidebar(true);
+            } catch (error) {
+              console.error("Failed to save screenshot:", error);
+            } finally {
+              // 截图完成后显示按钮
+              setIsScreenshotting(false);
+            }
+          },
+          closeCallback: () => {
+            console.log("截图结束");
+            // 截图取消时也要显示按钮
             setIsScreenshotting(false);
-          }
-        },
-        closeCallback: () => {
-          console.log("截图结束");
-          // 截图取消时也要显示按钮
-          setIsScreenshotting(false);
-        },
-      });
+          },
+        });
+      }, 0);
     });
 
     // 监听获取截图请求
@@ -187,6 +190,16 @@ export default () => {
         return true;
       } else {
         return false;
+      }
+    });
+
+    // 监听切换侧边栏请求
+    onMessage("toggle-sidebar", async (message: any) => {
+      console.log("Content received toggle-sidebar message:", message);
+      setShowSidebar(prev => !prev);
+      // 如果打开侧边栏，重新加载截图
+      if (!showSidebar) {
+        await loadScreenshots();
       }
     });
   }, []);

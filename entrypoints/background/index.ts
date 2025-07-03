@@ -102,6 +102,22 @@ export default defineBackground(() => {
       console.error('Failed to open options page:', error);
     }
   });
+
+  // 监听切换侧边栏的请求，转发到content脚本
+  onMessage('toggle-sidebar', async ({ data, sender }) => {
+    try {
+      console.log('Background received toggle-sidebar message:', data);
+      
+      await sendActMessage('toggle-sidebar', {
+        type: 'TOGGLE_SIDEBAR',
+        payload: data.payload
+      });
+      
+      console.log('Toggle sidebar message sent to content script');
+    } catch (error) {
+      console.error('Failed to toggle sidebar:', error);
+    }
+  });
 });
 
 async function downloadImage(dataUrl: string): Promise<void> {
