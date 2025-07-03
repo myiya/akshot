@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sendMessage, sendActMessage } from '@/messaging';
 
 // 添加调试日志
@@ -7,6 +7,53 @@ console.log('Popup initialized');
 function App() {
   const [isScreenshotting, setIsScreenshotting] = useState(false);
   const [status, setStatus] = useState('');
+  const [canScreenshot, setCanScreenshot] = useState(true);
+  const [currentUrl, setCurrentUrl] = useState('');
+
+  // 检测当前页面是否支持截图
+  useEffect(() => {
+    const checkPageSupport = async () => {
+      try {
+        const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+        if (tabs.length === 0 || !tabs[0].url) {
+          setCanScreenshot(false);
+          setStatus('无法获取当前页面信息');
+          return;
+        }
+
+        const url = tabs[0].url;
+        setCurrentUrl(url);
+
+        // 检查是否为不支持的页面
+        const unsupportedPatterns = [
+          /^chrome:\/\//,
+          /^chrome-extension:\/\//,
+          /^moz-extension:\/\//,
+          /^about:/,
+          /^edge:\/\//,
+          /^opera:\/\//,
+          /^brave:\/\//,
+          /^file:\/\//
+        ];
+
+        const isUnsupported = unsupportedPatterns.some(pattern => pattern.test(url));
+        
+        if (isUnsupported) {
+          setCanScreenshot(false);
+          setStatus('当前页面不支持截图功能');
+        } else {
+          setCanScreenshot(true);
+          setStatus('');
+        }
+      } catch (error) {
+        console.error('检查页面支持失败:', error);
+        setCanScreenshot(false);
+        setStatus('检查页面支持失败');
+      }
+    };
+
+    checkPageSupport();
+  }, []);
 
   // 处理截图
   const handleScreenshot = async () => {
@@ -70,33 +117,62 @@ function App() {
         <div className="flex flex-col items-center space-y-4">
           <button 
             className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform ${
-              isScreenshotting 
+              isScreenshotting || !canScreenshot
                 ? 'bg-gray-400 cursor-not-allowed' 
                 : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 shadow-lg hover:shadow-xl'
             }`}
             onClick={handleScreenshot}
-            disabled={isScreenshotting}
+            disabled={isScreenshotting || !canScreenshot}
+            title={!canScreenshot ? '当前页面不支持截图功能' : '开始截图'}
           >
             <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">{isScreenshotting ? '⏳' : '📷'}</span>
-              <span>{isScreenshotting ? '截图中...' : '开始截图'}</span>
+              <span className="text-lg">
+                {isScreenshotting ? '⏳' : !canScreenshot ? '🚫' : '📷'}
+              </span>
+              <span>
+                {isScreenshotting ? '截图中...' : !canScreenshot ? '不支持截图' : '开始截图'}
+              </span>
             </div>
           </button>
           
           <button 
-            className="w-full py-3 px-6 rounded-xl font-semibold text-indigo-600 bg-white border-2 border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+            className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform ${
+              isScreenshotting || !canScreenshot
+                ? 'text-gray-400 bg-gray-100 border-2 border-gray-200 cursor-not-allowed' 
+                : 'text-indigo-600 bg-white border-2 border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 hover:scale-105 shadow-md hover:shadow-lg'
+            }`}
             onClick={handleToggleSidebar}
-            disabled={isScreenshotting}
+            disabled={isScreenshotting || !canScreenshot}
+            title={!canScreenshot ? '当前页面不支持查看截图历史' : '查看截图历史'}
           >
             <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">📋</span>
+              <span className="text-lg">
+                {!canScreenshot ? '🚫' : '📋'}
+              </span>
               <span>查看截图历史</span>
             </div>
           </button>
           
           {status && (
-            <div className="w-full p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-700 text-center font-medium">{status}</p>
+            <div className={`w-full p-3 rounded-lg ${
+              !canScreenshot 
+                ? 'bg-red-50 border border-red-200' 
+                : 'bg-blue-50 border border-blue-200'
+            }`}>
+              <p className={`text-sm text-center font-medium ${
+                !canScreenshot ? 'text-red-700' : 'text-blue-700'
+              }`}>
+                {status}
+              </p>
+              {!canScreenshot && (
+                <div className="mt-2 text-xs text-red-600 text-center">
+                  <p>不支持的页面类型包括：</p>
+                  <p>• Chrome 内部页面 (chrome://)</p>
+                  <p>• 扩展页面 (chrome-extension://)</p>
+                  <p>• 本地文件 (file://)</p>
+                  <p>• 浏览器设置页面</p>
+                </div>
+              )}
             </div>
           )}
         </div>
