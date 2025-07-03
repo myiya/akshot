@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Screenshot, WebsiteCategory } from '../types';
+import type { Screenshot, WebsiteCategory } from '../types';
 import { getDomainFromUrl, getWebsiteIcon, getWebsiteName } from '../utils';
 
 interface ScreenshotsPageProps {

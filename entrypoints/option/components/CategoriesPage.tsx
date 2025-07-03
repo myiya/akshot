@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { WebsiteCategory, Screenshot } from '../types';
+import type { WebsiteCategory, Screenshot } from '../types';
 
 interface CategoriesPageProps {
   websiteCategories: WebsiteCategory[];

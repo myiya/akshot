@@ -17,6 +17,7 @@ import { getDomainFromUrl, getWebsiteIcon, getWebsiteName } from './utils';
 import { getAllScreenshots, deleteScreenshot as deleteScreenshotFromDB } from '../../utils/db';
 
 export default function App() {
+  const navigate = useNavigate();
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
   const [websiteCategories, setWebsiteCategories] = useState<WebsiteCategory[]>([]);
 
@@ -76,8 +77,18 @@ export default function App() {
     }
   };
 
+  const handleDeleteScreenshot = async (screenshot: Screenshot) => {
+    setScreenshots(prev => prev.filter(s => s.id !== screenshot.id));
+    setWebsiteCategories(prev => 
+      prev.map(category => ({
+        ...category,
+        screenshots: category.screenshots.filter(s => s.id !== screenshot.id)
+      })).filter(category => category.screenshots.length > 0)
+    );
+  };
+
   // 下载单个截图
-  const downloadScreenshot = (screenshot: Screenshot) => {
+  const downloadScreenshot = async (screenshot: Screenshot) => {
     try {
       const a = document.createElement('a');
       a.href = screenshot.imageData;
@@ -126,7 +137,18 @@ export default function App() {
 
   useEffect(() => {
     loadScreenshots();
-  }, []);
+    
+    // 检查是否有 URL 查询参数中的 screenshotId（兼容旧版本）
+    const urlParams = new URLSearchParams(window.location.search);
+    const screenshotId = urlParams.get('screenshotId');
+    
+    if (screenshotId) {
+      // 重定向到详情页
+      navigate(`/detail/${screenshotId}`, { replace: true });
+      // 清理 URL
+      window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+    }
+  }, [navigate]);
 
   return (
     <div className="akshot-option-container">

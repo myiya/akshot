@@ -91,9 +91,9 @@ export default defineBackground(() => {
     try {
       console.log('Background received open-options-page message:', data);
       
-      // 如果有图片ID，通过URL参数传递
+      // 如果有图片ID，使用哈希路由传递
       if (data.payload?.screenshotId) {
-        const optionsUrl = browser.runtime.getURL('/option.html') + `?screenshotId=${data.payload.screenshotId}`;
+        const optionsUrl = browser.runtime.getURL('/option.html') + `#/detail/${data.payload.screenshotId}`;
         await browser.tabs.create({ url: optionsUrl });
       } else {
         await browser.runtime.openOptionsPage();
