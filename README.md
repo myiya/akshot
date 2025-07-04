@@ -209,7 +209,7 @@ pnpm release 1.2.0
 ## 🙏 致谢
 
 - [WXT](https://wxt.dev/) - 现代化浏览器扩展开发框架
-- [js-web-screen-shot](https://github.com/likaia/js-web-screen-shot) - 强大的网页截图库
+- [js-web-screen-shot](https://github.com/likaia/js-screen-shot) - 强大的网页截图库
 - [React](https://reactjs.org/) - 用户界面构建库
 - [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
 
