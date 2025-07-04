@@ -1,8 +1,9 @@
 name: Build and Release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       version:
@@ -43,39 +44,60 @@ jobs:
     - name: Create Firefox zip
       run: pnpm zip:firefox
       
-    - name: Get version from package.json
-      id: package-version
-      run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+    - name: Get version from Git tag
+      id: get-version
+      run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       
-    - name: Find Chrome zip file
-      id: chrome-zip
-      run: echo "path=$(find .output -name '*chrome*.zip' | head -1)" >> $GITHUB_OUTPUT
-      
-    - name: Find Firefox zip file
-      id: firefox-zip
-      run: echo "path=$(find .output -name '*firefox*.zip' | head -1)" >> $GITHUB_OUTPUT
-      
-    - name: Upload Chrome extension
-      if: steps.chrome-zip.outputs.path != ''
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{ steps.chrome-zip.outputs.path }}
-        asset_name: akshot-${{ steps.package-version.outputs.version }}-chrome.zip
-        asset_content_type: application/zip
+    - name: Verify zip files exist
+      run: |
+        VERSION=${{ steps.get-version.outputs.version }}
+        CHROME_ZIP=".output/akshot-${VERSION}-chrome.zip"
+        FIREFOX_ZIP=".output/akshot-${VERSION}-firefox.zip"
         
-    - name: Upload Firefox extension
-      if: steps.firefox-zip.outputs.path != ''
-      uses: actions/upload-release-asset@v1
+        if [ ! -f "$CHROME_ZIP" ]; then
+          echo "❌ Chrome zip file not found: $CHROME_ZIP"
+          exit 1
+        fi
+        
+        if [ ! -f "$FIREFOX_ZIP" ]; then
+          echo "❌ Firefox zip file not found: $FIREFOX_ZIP"
+          exit 1
+        fi
+        
+        echo "✅ Both zip files found:"
+        echo "  - Chrome: $CHROME_ZIP"
+        echo "  - Firefox: $FIREFOX_ZIP"
+      
+    - name: Create Release
+      id: create-release
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{ steps.firefox-zip.outputs.path }}
-        asset_name: akshot-${{ steps.package-version.outputs.version }}-firefox.zip
-        asset_content_type: application/zip
+        tag_name: ${{ github.ref_name }}
+        name: Release v${{ steps.get-version.outputs.version }}
+        body: |
+          ## 🚀 AkShot v${{ steps.get-version.outputs.version }}
+          
+          ### 📦 安装包下载
+          - **Chrome/Edge**: [akshot-${{ steps.get-version.outputs.version }}-chrome.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/akshot-${{ steps.get-version.outputs.version }}-chrome.zip)
+          - **Firefox**: [akshot-${{ steps.get-version.outputs.version }}-firefox.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/akshot-${{ steps.get-version.outputs.version }}-firefox.zip)
+          
+          ### 📋 安装说明
+          1. 下载对应浏览器的安装包
+          2. 解压 zip 文件
+          3. 在浏览器中打开扩展管理页面
+          4. 启用「开发者模式」
+          5. 点击「加载已解压的扩展程序」
+          6. 选择解压后的文件夹
+          
+          ### 🔄 更新内容
+          请查看 [提交历史](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) 了解详细更改。
+        draft: false
+        prerelease: false
+        files: |
+          .output/akshot-${{ steps.get-version.outputs.version }}-chrome.zip
+          .output/akshot-${{ steps.get-version.outputs.version }}-firefox.zip
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
