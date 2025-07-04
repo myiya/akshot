@@ -116,10 +116,10 @@ function App() {
         {/* Action Buttons */}
         <div className="flex flex-col items-center space-y-4">
           <button 
-            className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform ${
+            className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 transform ${
               isScreenshotting || !canScreenshot
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 shadow-lg hover:shadow-xl'
+                ? 'bg-gray-400 cursor-not-allowed text-gray-400' 
+                : 'bg-gradient-to-r from-blue-500 text-white to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 shadow-lg hover:shadow-xl'
             }`}
             onClick={handleScreenshot}
             disabled={isScreenshotting || !canScreenshot}
@@ -164,15 +164,6 @@ function App() {
               }`}>
                 {status}
               </p>
-              {!canScreenshot && (
-                <div className="mt-2 text-xs text-red-600 text-center">
-                  <p>不支持的页面类型包括：</p>
-                  <p>• Chrome 内部页面 (chrome://)</p>
-                  <p>• 扩展页面 (chrome-extension://)</p>
-                  <p>• 本地文件 (file://)</p>
-                  <p>• 浏览器设置页面</p>
-                </div>
-              )}
             </div>
           )}
         </div>
