@@ -20,6 +20,10 @@ export default defineConfig({
       open_in_tab: true
     },
   },
+  zip: {
+    // 禁用源码包生成，只生成扩展安装包
+    excludeSources: ['**/*'],
+  },
   webExt: {
     startUrls: ["https://www.baidu.com"],
   },

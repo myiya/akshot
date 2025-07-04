@@ -80,19 +80,14 @@ jobs:
           ## 🚀 AkShot v${{ steps.get-version.outputs.version }}
           
           ### 📦 安装包下载
-          - **Chrome/Edge**: [akshot-${{ steps.get-version.outputs.version }}-chrome.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/akshot-${{ steps.get-version.outputs.version }}-chrome.zip)
-          - **Firefox**: [akshot-${{ steps.get-version.outputs.version }}-firefox.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/akshot-${{ steps.get-version.outputs.version }}-firefox.zip)
+          - **Chrome 扩展**: `akshot-${{ steps.get-version.outputs.version }}-chrome.zip`
+          - **Firefox 扩展**: `akshot-${{ steps.get-version.outputs.version }}-firefox.zip`
           
-          ### 📋 安装说明
-          1. 下载对应浏览器的安装包
-          2. 解压 zip 文件
-          3. 在浏览器中打开扩展管理页面
-          4. 启用「开发者模式」
-          5. 点击「加载已解压的扩展程序」
-          6. 选择解压后的文件夹
-          
-          ### 🔄 更新内容
-          请查看 [提交历史](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) 了解详细更改。
+          ### 📝 安装说明
+          1. 下载对应浏览器的扩展包
+          2. 解压缩文件
+          3. 在浏览器扩展管理页面启用开发者模式
+          4. 选择"加载已解压的扩展程序"并选择解压后的文件夹
         draft: false
         prerelease: false
         files: |
@@ -104,7 +99,6 @@ jobs:
       with:
         name: extension-builds
         path: |
-          .output/*.zip
-          .output/chrome-mv3-prod/
-          .output/firefox-mv2-prod/
+          .output/akshot-${{ steps.get-version.outputs.version }}-chrome.zip
+          .output/akshot-${{ steps.get-version.outputs.version }}-firefox.zip
         retention-days: 30
