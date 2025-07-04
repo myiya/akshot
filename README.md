@@ -3,7 +3,7 @@
   <h1>🚀 AkShot</h1>
   <p><strong>智能网页截图工具 - 让截图更简单</strong></p>
   
-  [![Version](https://img.shields.io/badge/version-0.0.4-blue.svg)](https://github.com/myiya/akshot)
+  [![Version](https://img.shields.io/badge/version-0.0.6-blue.svg)](https://github.com/myiya/akshot)
   [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
   [![React](https://img.shields.io/badge/React-19.1.0-61dafb.svg)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
