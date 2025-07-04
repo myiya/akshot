@@ -140,13 +140,13 @@ if errorlevel 1 (
 )
 
 echo ✅ 版本 v%VERSION% 发布完成！
-echo ℹ️  请到 GitHub 创建 Release: https://github.com/your-username/akshot/releases/new?tag=v%VERSION%
+echo ℹ️  请到 GitHub 创建 Release: https://github.com/myiya/akshot/releases/new?tag=v%VERSION%
 echo ℹ️  GitHub Actions 将自动构建并上传安装包
 
 REM 询问是否打开浏览器
 set /p "REPLY=是否打开 GitHub Release 页面? (y/N): "
 if /i "!REPLY!"=="y" (
-    start "" "https://github.com/your-username/akshot/releases/new?tag=v%VERSION%"
+    start "" "https://github.com/myiya/akshot/releases/new?tag=v%VERSION%"
 )
 
 endlocal

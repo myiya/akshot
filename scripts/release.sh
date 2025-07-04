@@ -133,7 +133,7 @@ git push origin main
 git push origin "v$VERSION"
 
 print_success "版本 v$VERSION 发布完成！"
-print_info "请到 GitHub 创建 Release: https://github.com/your-username/akshot/releases/new?tag=v$VERSION"
+print_info "请到 GitHub 创建 Release: https://github.com/myiya/akshot/releases/new?tag=v$VERSION"
 print_info "GitHub Actions 将自动构建并上传安装包"
 
 # 打开浏览器到 GitHub Release 页面（可选）
@@ -141,6 +141,6 @@ if command -v open &> /dev/null; then
     read -p "是否打开 GitHub Release 页面? (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        open "https://github.com/your-username/akshot/releases/new?tag=v$VERSION"
+        open "https://github.com/myiya/akshot/releases/new?tag=v$VERSION"
     fi
 fi
