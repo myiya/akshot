@@ -141,24 +141,61 @@ akshot/
 
 ---
 
-## 🤝 贡献指南
+## 🚀 发布 (Releases)
 
-我们欢迎所有形式的贡献！
+项目使用 GitHub Actions 自动构建和发布：
 
-### 🐛 报告问题
-- 使用 [GitHub Issues](https://github.com/your-username/akshot/issues) 报告 bug
-- 提供详细的复现步骤和环境信息
+### 📦 自动构建
+- **CI 检查**: 每次推送和 PR 都会触发自动构建和类型检查
+- **多版本测试**: 支持 Node.js 18 和 20 版本测试
+- **跨浏览器构建**: 自动构建 Chrome 和 Firefox 版本
 
-### 💡 功能建议
-- 在 Issues 中提出新功能建议
-- 详细描述功能需求和使用场景
+### 🏷️ 发布流程
 
-### 🔧 代码贡献
-1. Fork 本项目
+#### 🤖 自动发布（推荐）
+```bash
+# 自动递增补丁版本并发布
+pnpm release
+
+# Windows 用户
+pnpm release:win
+
+# 手动指定版本号
+pnpm release 1.2.0
+```
+
+#### 📋 手动发布
+1. 更新 `package.json` 中的版本号
+2. 创建 Git 标签: `git tag v1.0.0`
+3. 推送标签: `git push origin v1.0.0`
+4. GitHub Actions 自动构建并创建 Release
+
+#### ✨ 发布脚本功能
+- 🔍 **自动版本检测**: 从 `package.json` 读取当前版本
+- 📈 **智能递增**: 自动递增补丁版本号
+- ✅ **完整检查**: 分支检查、代码检查、构建测试
+- 🏷️ **自动标签**: 创建 Git 标签并推送到远程
+- 🚀 **一键发布**: 完整的发布流程自动化
+
+### 📥 安装包下载
+- **Chrome/Edge**: `akshot-{version}-chrome.zip`
+- **Firefox**: `akshot-{version}-firefox.zip`
+
+## 🤝 贡献 (Contributing)
+
+我们欢迎所有形式的贡献！请查看 [贡献指南](./CONTRIBUTING.md) 了解详细信息。
+
+### 快速开始
+1. Fork 项目
 2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+3. 提交更改 (`git commit -m 'feat: add some amazing feature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
+5. 打开 Pull Request
+
+### 开发工作流
+- 🐛 [报告 Bug](https://github.com/your-username/akshot/issues/new?template=bug_report.md)
+- 🚀 [功能建议](https://github.com/your-username/akshot/issues/new?template=feature_request.md)
+- 📖 查看 [贡献指南](./CONTRIBUTING.md)
 
 ---
 

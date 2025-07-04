@@ -12,7 +12,12 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "release": "./scripts/release.sh",
+    "release:win": "scripts\\release.bat",
+    "build:all": "pnpm build && pnpm build:firefox",
+    "zip:all": "pnpm zip && pnpm zip:firefox",
+    "check": "pnpm compile && pnpm build:all"
   },
   "dependencies": {
     "@types/jszip": "^3.4.1",
