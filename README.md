@@ -3,7 +3,7 @@
   <h1>🚀 AkShot</h1>
   <p><strong>智能网页截图工具 - 让截图更简单</strong></p>
   
-  [![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)](https://github.com/your-username/akshot)
+  [![Version](https://img.shields.io/badge/version-0.0.4-blue.svg)](https://github.com/myiya/akshot)
   [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
   [![React](https://img.shields.io/badge/React-19.1.0-61dafb.svg)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
@@ -57,7 +57,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/akshot.git
+git clone https://github.com/myiya/akshot.git
 cd akshot
 
 # 安装依赖
@@ -178,6 +178,7 @@ pnpm release 1.2.0
 - 🚀 **一键发布**: 完整的发布流程自动化
 
 ### 📥 安装包下载
+从 [GitHub Releases](https://github.com/myiya/akshot/releases) 页面下载对应的安装包：
 - **Chrome/Edge**: `akshot-{version}-chrome.zip`
 - **Firefox**: `akshot-{version}-firefox.zip`
 
@@ -193,8 +194,8 @@ pnpm release 1.2.0
 5. 打开 Pull Request
 
 ### 开发工作流
-- 🐛 [报告 Bug](https://github.com/your-username/akshot/issues/new?template=bug_report.md)
-- 🚀 [功能建议](https://github.com/your-username/akshot/issues/new?template=feature_request.md)
+- 🐛 [报告 Bug](https://github.com/myiya/akshot/issues/new?template=bug_report.md)
+- 🚀 [功能建议](https://github.com/myiya/akshot/issues/new?template=feature_request.md)
 - 📖 查看 [贡献指南](./CONTRIBUTING.md)
 
 ---

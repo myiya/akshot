@@ -79,20 +79,26 @@ jobs:
         body: |
           ## 🚀 AkShot v${{ steps.get-version.outputs.version }}
           
-          ### 📦 安装包下载
+          ### 📦 下载文件
           - **Chrome 扩展**: `akshot-${{ steps.get-version.outputs.version }}-chrome.zip`
           - **Firefox 扩展**: `akshot-${{ steps.get-version.outputs.version }}-firefox.zip`
+          - **源码包**: `akshot-${{ steps.get-version.outputs.version }}-sources.zip`
           
           ### 📝 安装说明
-          1. 下载对应浏览器的扩展包
+          **扩展安装：**
+          1. 下载对应浏览器的扩展包（chrome.zip 或 firefox.zip）
           2. 解压缩文件
           3. 在浏览器扩展管理页面启用开发者模式
           4. 选择"加载已解压的扩展程序"并选择解压后的文件夹
+          
+          **开发者：**
+          - 下载 sources.zip 获取完整源码
         draft: false
         prerelease: false
         files: |
           .output/akshot-${{ steps.get-version.outputs.version }}-chrome.zip
           .output/akshot-${{ steps.get-version.outputs.version }}-firefox.zip
+          .output/akshot-${{ steps.get-version.outputs.version }}-sources.zip
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -101,4 +107,5 @@ jobs:
         path: |
           .output/akshot-${{ steps.get-version.outputs.version }}-chrome.zip
           .output/akshot-${{ steps.get-version.outputs.version }}-firefox.zip
+          .output/akshot-${{ steps.get-version.outputs.version }}-sources.zip
         retention-days: 30

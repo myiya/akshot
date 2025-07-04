@@ -46,8 +46,8 @@ jobs:
       with:
         name: build-artifacts
         path: |
-          .output/chrome-mv3-prod/
-          .output/firefox-mv2-prod/
+          .output/chrome-mv3/
+          .output/firefox-mv2/
         retention-days: 7
         
   lint:
