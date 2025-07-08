@@ -19,6 +19,12 @@ export default defineConfig({
       page: "option.html",
       open_in_tab: true
     },
+    web_accessible_resources: [
+      {
+        resources: ['cvs-iframe.html'],
+        matches: ['*://*/*'],
+      },
+    ],
   },
   zip: {
     // 禁用源码包生成，只生成扩展安装包

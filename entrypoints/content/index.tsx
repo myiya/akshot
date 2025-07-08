@@ -1,3 +1,5 @@
+import { ContentScriptContext } from "wxt/utils/content-script-context";
+// import { createShadowRootUi, createIframeUi, defineContentScript } from "#imports";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./style.css";
@@ -5,12 +7,8 @@ import "./style.css";
 // 添加详细的调试日志
 console.log('Content script loaded', { id: browser.runtime.id });
 
-export default defineContentScript({
-  matches: ["*://*/*"],
-  cssInjectionMode: "ui",
-
-  async main(ctx) {
-    const ui = await createShadowRootUi(ctx, {
+async function initShadowUI(ctx: ContentScriptContext) {
+  const ui = await createShadowRootUi(ctx, {
       name: "ak-shot",
       position: "inline",
       anchor: "body",
@@ -31,5 +29,41 @@ export default defineContentScript({
     });
 
     ui.mount();
+}
+
+async function initIframeUI(ctx: ContentScriptContext) {
+  const ui = createIframeUi(ctx, {
+      page: 'cvs-iframe.html' as any,
+      position: 'inline',
+      anchor: 'body',
+      onMount: (wrapper, iframe) => {
+        // Add styles to the iframe like width
+        iframe.style.top = '0px';
+        iframe.style.left = '0px';
+        iframe.style.border = 'none';
+        iframe.style.position = 'fixed';
+        iframe.style.zIndex = '2147483647';
+        iframe.style.colorScheme = 'auto';
+        iframe.style.margin = '0px';
+        iframe.style.width = '1512px';
+        iframe.style.height = '746px';
+        iframe.style.backgroundColor = 'transparent';
+        iframe.style.display = 'none';
+      },
+    });
+
+    ui.mount();
+}
+
+export default defineContentScript({
+  matches: ["*://*/*"],
+  cssInjectionMode: "ui",
+
+  async main(ctx) {
+    // 挂载 Shadow DOM
+    await initShadowUI(ctx);
+
+    // 挂载 Iframe DOM
+    await initIframeUI(ctx);
   },
 });
