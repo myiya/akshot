@@ -38,6 +38,9 @@ async function initIframeUI(ctx: ContentScriptContext) {
       anchor: 'body',
       onMount: (wrapper, iframe) => {
         // Add styles to the iframe like width
+        console.log('iframe width', document.body.clientWidth);
+        console.log('iframe height', document.body.clientHeight);
+        
         iframe.style.top = '0px';
         iframe.style.left = '0px';
         iframe.style.border = 'none';
@@ -45,8 +48,8 @@ async function initIframeUI(ctx: ContentScriptContext) {
         iframe.style.zIndex = '2147483647';
         iframe.style.colorScheme = 'auto';
         iframe.style.margin = '0px';
-        iframe.style.width = '1512px';
-        iframe.style.height = '746px';
+        iframe.style.width = document.body.clientWidth+'px';
+        iframe.style.height = document.body.clientHeight+'px';
         iframe.style.backgroundColor = 'transparent';
         iframe.style.display = 'none';
       },
