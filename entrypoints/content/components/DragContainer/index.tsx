@@ -11,7 +11,7 @@ const DragContainer = React.memo(() => {
   });
 
   return (
-    <div style={{ height: '400px', width: '400px', border: '1px solid red', position: 'relative', margin: '20px' }}>
+    <div className="drag-container">
       <DragResizableBox
         onChange={(newRect) => setRect(newRect)}
         rect={rect}
@@ -19,19 +19,10 @@ const DragContainer = React.memo(() => {
         limit={{
           left: 0,
           top: 0,
-          right: 400,
-          bottom: 400,
+          right: document.body.clientWidth,
+          bottom: document.body.clientHeight,
         }}
-        style={{ backgroundColor: "#F00" }}
       >
-        <div
-          style={{
-            padding: "10px",
-            width: "100%",
-          }}
-        >
-          move me!
-        </div>
       </DragResizableBox>
     </div>
   );

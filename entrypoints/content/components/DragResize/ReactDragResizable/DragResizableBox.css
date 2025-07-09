@@ -10,6 +10,10 @@
   border: 1px solid transparent;
   z-index: 1;
   cursor: move;
+  box-shadow: 
+    0 0 0 99999px rgba(0, 0, 0, 0.3), /* 上方阴影 */
+    0 0 0 99999px rgba(0, 0, 0, 0.3); /* 外围大面积阴影 */
+  background-color: transparent;
 }
 
 .resizable_box.checked {
@@ -27,6 +31,7 @@
 .resizable_box .rect {
   width: 8px;
   height: 8px;
+  border-radius: 50%;
   position: absolute;
   border: 1px solid rgba(6, 123, 239, 1);
   background-color: white;
