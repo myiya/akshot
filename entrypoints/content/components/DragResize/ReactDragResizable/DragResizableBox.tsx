@@ -4,10 +4,10 @@ import React, {
   useCallback,
   useState,
   useMemo,
-} from 'react';
-import classNames from 'classnames';
+} from "react";
+import classNames from "classnames";
 // import '../index.css';
-import './DragResizableBox.css';
+import "./DragResizableBox.css";
 import type {
   AllBoxRectCollectorType,
   CalcRectType,
@@ -17,7 +17,7 @@ import type {
   LimitType,
   PositionType,
   RectType,
-} from './types';
+} from "./types";
 
 function getCoords(elem: Element) {
   const rect = elem.getBoundingClientRect();
@@ -58,10 +58,11 @@ const DragResizableBox: React.FC<
     minWidth = 20,
     minHeight = 20,
     diff = 3,
-    guidesColor = 'rgb(248, 54, 33)',
+    guidesColor = "rgb(248, 54, 33)",
     rectClassName,
     adsorb = true,
     guides = true,
+    resizeTip = true,
     ...restProps
   } = props;
   const [allowResize, setAllowResize] = useState(false);
@@ -76,7 +77,7 @@ const DragResizableBox: React.FC<
   const line_mdx = useRef<HTMLDivElement>(null);
   const line_mdy = useRef<HTMLDivElement>(null);
   // 方向
-  const direction = useRef<Direction>('left');
+  const direction = useRef<Direction>("left");
   // 用来记录鼠标点下去时元素的属性值
   const collector = useRef(initCollector);
 
@@ -84,14 +85,19 @@ const DragResizableBox: React.FC<
     (value1: number, value2: number) => {
       return Math.abs(value1 - value2) <= diff;
     },
-    [diff],
+    [diff]
   );
-  const showLine = useCallback((whichLine: React.RefObject<HTMLDivElement | null>) => {
-    whichLine.current!.hidden = false;
-  }, []);
+  const showLine = useCallback(
+    (whichLine: React.RefObject<HTMLDivElement | null>) => {
+      whichLine.current!.hidden = false;
+    },
+    []
+  );
   const hiddenLine = useCallback(() => {
     [line_n, line_e, line_s, line_w, line_mdx, line_mdy].forEach((line) => {
-      line.current!.hidden = true;
+      if (line.current) {
+        line.current!.hidden = true;
+      }
     });
   }, []);
   /**
@@ -110,53 +116,53 @@ const DragResizableBox: React.FC<
         shiftX: number;
         shiftY: number;
       },
-      e: MouseEvent,
+      e: MouseEvent
     ): CalcRectType => {
       let { left, top, width, height } = collectorRect;
       let { offsetX, offsetY, shiftX, shiftY } = offsetInfo;
       switch (direction.current) {
-        case 'left_top':
+        case "left_top":
           left = Math.min(left + width - minWidth, left - offsetX);
           top = Math.min(top + height - minHeight, top - offsetY);
           width = width + offsetX;
           height = height + offsetY;
           break;
-        case 'left_bottom':
+        case "left_bottom":
           left = Math.min(left + width - minWidth, left - offsetX);
           width = width + offsetX;
           height = height - offsetY;
           break;
-        case 'right_top':
+        case "right_top":
           top = Math.min(top + height - minHeight, top - offsetY);
           width = width - offsetX;
           height = height + offsetY;
           break;
-        case 'right_bottom':
+        case "right_bottom":
           width = width - offsetX;
           height = height - offsetY;
           break;
-        case 'top':
+        case "top":
           top = Math.min(top + height - minHeight, top - offsetY);
           height = height + offsetY;
           break;
-        case 'bottom':
+        case "bottom":
           height = height - offsetY;
           break;
-        case 'left':
+        case "left":
           left = Math.min(left + width - minWidth, left - offsetX);
           width = width + offsetX;
           break;
-        case 'right':
+        case "right":
           width = width - offsetX;
           break;
-        case 'content':
+        case "content":
           left = e.pageX - shiftX;
           top = e.pageY - shiftY;
           break;
       }
       return { width, height, left, top };
     },
-    [],
+    []
   );
 
   /**
@@ -169,7 +175,7 @@ const DragResizableBox: React.FC<
     (rect: CollectedRectType, limit: LimitType): CalcRectType => {
       let { left, top, width, height } = rect;
       switch (direction.current) {
-        case 'content':
+        case "content":
           if (left < limit.left) {
             left = limit.left;
           }
@@ -183,7 +189,7 @@ const DragResizableBox: React.FC<
             top = limit.bottom - height;
           }
           break;
-        case 'left_top':
+        case "left_top":
           if (top < limit.top) {
             top = limit.top;
           }
@@ -191,12 +197,12 @@ const DragResizableBox: React.FC<
             left = limit.left;
           }
           break;
-        case 'top':
+        case "top":
           if (top < limit.top) {
             top = limit.top;
           }
           break;
-        case 'right_top':
+        case "right_top":
           if (top < limit.top) {
             top = limit.top;
           }
@@ -204,12 +210,12 @@ const DragResizableBox: React.FC<
             left = Math.max(limit.left, left - (width + left - limit.right));
           }
           break;
-        case 'right':
+        case "right":
           if (left + width > limit.right) {
             left = Math.max(limit.left, left - (left + width - limit.right));
           }
           break;
-        case 'right_bottom':
+        case "right_bottom":
           if (left + width > limit.right) {
             left = Math.max(limit.left, left - (left + width - limit.right));
           }
@@ -217,12 +223,12 @@ const DragResizableBox: React.FC<
             top = Math.max(limit.top, top - (top + height - limit.bottom));
           }
           break;
-        case 'bottom':
+        case "bottom":
           if (top + height > limit.bottom) {
             top = Math.max(limit.top, top - (top + height - limit.bottom));
           }
           break;
-        case 'left_bottom':
+        case "left_bottom":
           if (left < limit.left) {
             left = limit.left;
           }
@@ -230,7 +236,7 @@ const DragResizableBox: React.FC<
             top = Math.max(limit.top, top - (top + height - limit.bottom));
           }
           break;
-        case 'left':
+        case "left":
           if (left < limit.left) {
             left = limit.left;
           }
@@ -244,7 +250,7 @@ const DragResizableBox: React.FC<
       }
       return { width, height, left, top };
     },
-    [],
+    []
   );
   /**
    *  handle guidess base on curCalcRect after handleLimit
@@ -322,7 +328,7 @@ const DragResizableBox: React.FC<
             {
               isNearly: isNearly(
                 halfX,
-                curCalcRect.top + curCalcRect.height / 2,
+                curCalcRect.top + curCalcRect.height / 2
               ),
               lineNode: line_mdx.current,
               showLine: () => showLine(line_mdx),
@@ -406,7 +412,7 @@ const DragResizableBox: React.FC<
             {
               isNearly: isNearly(
                 halfY,
-                curCalcRect.left + curCalcRect.width / 2,
+                curCalcRect.left + curCalcRect.width / 2
               ),
               lineNode: line_mdy.current,
               showLine: () => showLine(line_mdy),
@@ -433,20 +439,20 @@ const DragResizableBox: React.FC<
                   (
                     Object.keys(lineStyle) as Array<keyof typeof lineStyle>
                   ).forEach(
-                    (key) => (lineNode!.style[key] = lineStyle[key] + 'px'),
+                    (key) => (lineNode!.style[key] = lineStyle[key] + "px")
                   );
                   // 允许磁吸效果
                   if (adsorb) {
                     curCalcRect[key] = adsorbNum;
                   }
                 }
-              },
+              }
             );
-          },
+          }
         );
       });
     },
-    [adsorb],
+    [adsorb]
   );
 
   const onMouseMove = useCallback(
@@ -459,10 +465,10 @@ const DragResizableBox: React.FC<
       let curCalcRect = handleCalcRect(
         { left, top, width, height },
         { offsetX, offsetY, shiftX, shiftY },
-        e,
+        e
       );
       // 移动时处理辅助线
-      if (direction.current === 'content' && guides) {
+      if (direction.current === "content" && guides) {
         hiddenLine();
         handleLines(curCalcRect);
       }
@@ -482,7 +488,7 @@ const DragResizableBox: React.FC<
             height: Math.max(minHeight, curCalcRect.height),
           });
     },
-    [guides],
+    [guides]
   );
   /**
    * 收集所有相同移动盒子的 rect 属性
@@ -492,8 +498,8 @@ const DragResizableBox: React.FC<
     //其他所有相同的移动盒子
     let allBoxes = Array.from(
       (relative ? box.current?.parentElement! : document).querySelectorAll(
-        '.resizable_box',
-      ),
+        ".resizable_box"
+      )
     ) as HTMLElement[];
     for (let boxItem of allBoxes) {
       if (boxItem === box.current) {
@@ -523,7 +529,7 @@ const DragResizableBox: React.FC<
   const onMouseDown = useCallback(
     (
       e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-      currentDirection: Direction,
+      currentDirection: Direction
     ) => {
       e.stopPropagation();
       //收集所有相同移动盒子的 rect 属性
@@ -565,14 +571,14 @@ const DragResizableBox: React.FC<
       });
 
       direction.current = currentDirection;
-      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener("mousemove", onMouseMove);
     },
-    [],
+    []
   );
 
   const onMouseUp = useCallback(() => {
     hiddenLine();
-    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener("mousemove", onMouseMove);
   }, []);
 
   const onChecked = useCallback(() => setAllowResize(true), []);
@@ -582,16 +588,16 @@ const DragResizableBox: React.FC<
   }, []);
 
   useEffect(() => {
-    box.current?.parentElement!.addEventListener('mouseup', onMouseUp);
-    box.current?.parentElement!.addEventListener('click', onCancelChecked);
+    box.current?.parentElement!.addEventListener("mouseup", onMouseUp);
+    box.current?.parentElement!.addEventListener("click", onCancelChecked);
     return () => {
-      box.current?.parentElement!.removeEventListener('mouseup', onMouseUp);
-      box.current?.parentElement!.removeEventListener('click', onCancelChecked);
+      box.current?.parentElement!.removeEventListener("mouseup", onMouseUp);
+      box.current?.parentElement!.removeEventListener("click", onCancelChecked);
     };
   }, []);
 
   const classes = useMemo(() => {
-    return classNames('resizable_box', className, {
+    return classNames("resizable_box", className, {
       checked: allowResize,
     });
   }, [allowResize]);
@@ -605,34 +611,38 @@ const DragResizableBox: React.FC<
         style={{ ...style, ...rect, ...rectAttr }}
         {...restProps}
       >
+        {resizeTip && (
+          <div className="resize-tip">{rect?.width + " X " + rect?.height}</div>
+        )}
+
         {[
-          'left_top',
-          'left_bottom',
-          'right_top',
-          'right_bottom',
-          'top',
-          'bottom',
-          'left',
-          'right',
+          "left_top",
+          "left_bottom",
+          "right_top",
+          "right_bottom",
+          "top",
+          "bottom",
+          "left",
+          "right",
         ].map((item) => (
           <span
             key={item}
-            className={allowResize ? `rect rect_${item} ${rectClassName}` : ''}
+            className={allowResize ? `rect rect_${item} ${rectClassName}` : ""}
             onMouseDown={(e) => onMouseDown(e, item as Direction)}
           ></span>
         ))}
 
-        <div className="content" onMouseDown={(e) => onMouseDown(e, 'content')}>
+        <div className="content" onMouseDown={(e) => onMouseDown(e, "content")}>
           {props.children}
         </div>
       </div>
       {[
-        { className: 'n', ref: line_n },
-        { className: 'e', ref: line_e },
-        { className: 's', ref: line_s },
-        { className: 'w', ref: line_w },
-        { className: 'mdx', ref: line_mdx },
-        { className: 'mdy', ref: line_mdy },
+        { className: "n", ref: line_n },
+        { className: "e", ref: line_e },
+        { className: "s", ref: line_s },
+        { className: "w", ref: line_w },
+        { className: "mdx", ref: line_mdx },
+        { className: "mdy", ref: line_mdy },
       ].map(({ className, ref }) => (
         <div
           key={className}

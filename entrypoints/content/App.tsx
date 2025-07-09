@@ -10,6 +10,7 @@ export default () => {
   const [isTakeScreenshot, setIsTakeScreenshot] = useState(false);
 
   useEffect(() => {
+    // 截图
     onMessage("take-to-content", (message: any) => {
       setIsTakeScreenshot(true);
     });

@@ -79,6 +79,11 @@ export interface BaseDragResizableBoxPropsProps {
    * @description 小方块的className
    */
   rectClassName: string;
+  /**
+   * @default true
+   * @description 是否展示改变尺寸的提示
+   */
+  resizeTip: boolean;
 }
 
 export type DragResizableBoxProps = Partial<

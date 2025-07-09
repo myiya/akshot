@@ -20,6 +20,7 @@ const DragContainer = React.memo(() => {
   // 拖拽状态
   const [isDragging, setIsDragging] = useState(false);
   const [isBoxVisible, setIsBoxVisible] = useState(false);
+  const [isBoxSelected, setIsBoxSelected] = useState(false);
   const dragStartRef = useRef<{ x: number; y: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -134,9 +135,22 @@ const DragContainer = React.memo(() => {
     // 如果拖拽框太小，隐藏它
     if (rect.width < 10 || rect.height < 10) {
       setIsBoxVisible(false);
+      setIsBoxSelected(false);
       setRect({ left: 0, top: 0, width: 0, height: 0 });
     } else {
       setIsBoxVisible(true);
+      // 拖拽完成后自动选中截图框
+      setTimeout(() => {
+        const resizableBox = containerRef.current?.querySelector('.resizable_box') as HTMLElement;
+        if (resizableBox) {
+          const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+          });
+          resizableBox.dispatchEvent(clickEvent);
+          setIsBoxSelected(true);
+        }
+      }, 50);
     }
   }, [isDragging, rect.width, rect.height]);
 

@@ -10,10 +10,28 @@
   border: 1px solid transparent;
   z-index: 1;
   cursor: move;
-  box-shadow: 
-    0 0 0 99999px rgba(0, 0, 0, 0.3), /* 上方阴影 */
-    0 0 0 99999px rgba(0, 0, 0, 0.3); /* 外围大面积阴影 */
+  box-shadow:
+    0 0 0 99999px rgba(0, 0, 0, 0.3),
+    /* 上方阴影 */
+    0 0 0 99999px rgba(0, 0, 0, 0.3);
+  /* 外围大面积阴影 */
   background-color: transparent;
+}
+
+.resize-tip {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0 8px;
+  line-height: 26px;
+  height: 26px;
+  border-radius: 13px;
+  font-size: 12px;
+  white-space: nowrap;
+  user-select: none;
+  cursor: default;
 }
 
 .resizable_box.checked {
