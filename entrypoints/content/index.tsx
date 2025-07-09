@@ -1,7 +1,7 @@
 import { ContentScriptContext } from "wxt/utils/content-script-context";
-// import { createShadowRootUi, createIframeUi, defineContentScript } from "#imports";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
+import "~/assets/tailwind.css";
 import "./style.css";
 
 // 添加详细的调试日志
@@ -12,7 +12,7 @@ async function initShadowUI(ctx: ContentScriptContext) {
       name: "ak-shot",
       position: "inline",
       anchor: "body",
-      append: "first",
+      append: "last",
       onMount: (container) => {
         // Don't mount react app directly on <body>
         const wrapper = document.createElement("div");

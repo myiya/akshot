@@ -18,6 +18,7 @@ import type {
   PositionType,
   RectType,
 } from "./types";
+import PanelControl from "../PanelControl";
 
 function getCoords(elem: Element) {
   const rect = elem.getBoundingClientRect();
@@ -611,9 +612,13 @@ const DragResizableBox: React.FC<
         style={{ ...style, ...rect, ...rectAttr }}
         {...restProps}
       >
+        {/* 截图大小提示 */}
         {resizeTip && (
-          <div className="resize-tip">{rect?.width + " X " + rect?.height}</div>
+          <div className="resize-tip">{rect?.width + " * " + rect?.height}</div>
         )}
+
+        {/* 截图操作面板 */}
+        <PanelControl />
 
         {[
           "left_top",

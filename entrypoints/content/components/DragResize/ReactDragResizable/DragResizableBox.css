@@ -35,7 +35,7 @@
 }
 
 .resizable_box.checked {
-  border: 1px solid #09f;
+  border: 1px solid #667eea;
 }
 
 .resizable_box .content {
@@ -51,7 +51,7 @@
   height: 8px;
   border-radius: 50%;
   position: absolute;
-  border: 1px solid rgba(6, 123, 239, 1);
+  border: 2px solid #667eea;
   background-color: white;
   z-index: 10;
 }

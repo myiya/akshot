@@ -20,6 +20,7 @@
     "check": "pnpm compile && pnpm build:all"
   },
   "dependencies": {
+    "@ant-design/icons": "5.x",
     "@webext-core/messaging": "^2.3.0",
     "ahooks": "^3.9.0",
     "classnames": "^2.5.1",
