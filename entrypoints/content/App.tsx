@@ -1,3 +1,4 @@
+import DragContainer from './components/DragContainer';
 import Sidebar from './components/Sidebar';
 import './style.css';
 
@@ -7,9 +8,11 @@ console.log("Content script component initialized");
 export default () => {
 
   return (
-    <div>
+    <>
+      {/* drag Container */}
+      <DragContainer />
       {/* Sidebar */}
-      <Sidebar />
-    </div>
+      {/* <Sidebar /> */}
+    </>
   );
 };
