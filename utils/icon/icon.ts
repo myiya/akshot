@@ -1,10 +1,3 @@
-import { createFromIconfontCN } from "@ant-design/icons";
-import './font.js';
-
-export const AkIcon = createFromIconfontCN({
-  scriptUrl: '', // 在 iconfont.cn 上生成
-});
-
 export const CONTROLICONS = [
     {
         name: '矩形',

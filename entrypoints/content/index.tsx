@@ -2,6 +2,7 @@ import { ContentScriptContext } from "wxt/utils/content-script-context";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "~/assets/tailwind.css";
+import "~/assets/iconfont.css";
 import "./style.css";
 
 // 添加详细的调试日志
