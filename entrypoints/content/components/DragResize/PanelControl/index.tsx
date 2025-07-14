@@ -2,25 +2,59 @@ import React from "react";
 import classNames from "classnames";
 import { CONTROLICONS } from "@/utils/icon/icon";
 import "./index.css";
+import { CatContext } from "@/entrypoints/content/container/CatContainer";
 
 const PanelControl = React.memo(() => {
+
+    const { isTakeScreenshot, setIsTakeScreenshot } = useContext(CatContext);
 
     const [active, setActive] = React.useState<number | null>(null);
 
     const [step, setStep] = React.useState<number>(0);
 
+    const handleActClick = useCallback((i: number) => {
+        switch (i) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+                // 启动 canvas截图, 截图框位置大小就不能移动了
+                break;
+            case 7:
+                // 撤销
+                break;
+            case 8:
+                // 下载
+                break;
+            case 9:
+                // 关闭
+                setIsTakeScreenshot(false);
+                break;
+            case 10:
+                // 保存
+                break;
+            default:
+                break;
+        }
+
+        setActive(i);
+    }, []);
+
     return (
         <div className="panel-control">
             {CONTROLICONS.map((it, i) => (
-                <>
+                <React.Fragment key={it.id}>
                     {i === 7 && <div className="panel-line"></div>}
-                    <div className="panel-control-item" title={it.name} key={it.name}>
+                    <div className="panel-control-item" title={it.name}>
                         <span className={classNames('panel-icon iconfont', it.icon, {
                             'panel-active': active === i && i !== 7,
                             'panel-disabled': i === 7 && step === 0,
-                        })} onClick={() => setActive(i)}></span>
+                        })} onClick={() => handleActClick(it.id)}></span>
                     </div>
-                </>
+                </React.Fragment>
             ))}
         </div>
     )
