@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import "./style.css";
 
 import CatContainer, { CatContext } from "./container/CatContainer";
+import DragControlContainer from "./container/DragControlContainer";
 
 // 添加调试日志
 console.log("Content script component initialized");
@@ -13,12 +14,16 @@ console.log("Content script component initialized");
 const AppContent = () => {
   const { isTakeScreenshot } = useContext(CatContext);
 
-  console.log('isTakeScreenshot:', isTakeScreenshot);
+  console.log("isTakeScreenshot:", isTakeScreenshot);
 
   return (
     <>
       {/* drag Container */}
-      {isTakeScreenshot && <DragContainer />}
+      {isTakeScreenshot && (
+        <DragControlContainer>
+          <DragContainer />
+        </DragControlContainer>
+      )}
       {/* Sidebar */}
       {/* <Sidebar /> */}
     </>

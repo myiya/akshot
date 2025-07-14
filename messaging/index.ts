@@ -31,6 +31,12 @@ interface MessagingProtocol {
   'save-screenshot'(message: { type: MessageType; payload: { url: string; imageData: string } }): Promise<string>;
 
   /**
+   * @description 下载截图
+   * @param message 包含要下载的截图ID
+   */
+  'download-screenshot'(message: { type: MessageType; payload: { id: string } }): Promise<void>;
+
+  /**
    * @description 获取当前网站的所有截图
    * @param message 包含查询条件
    */

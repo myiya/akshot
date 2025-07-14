@@ -29,6 +29,11 @@ export default defineBackground(() => {
       console.error('Failed to forward screenshot request:', error);
     }
   });
+
+  // 下载图片
+  onMessage('download-screenshot', async({ data }) => {
+    
+  });
   
   // 监听来自content脚本的数据库操作请求
   onMessage('save-screenshot', async ({ data }) => {

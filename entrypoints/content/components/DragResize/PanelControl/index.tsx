@@ -2,15 +2,12 @@ import React from "react";
 import classNames from "classnames";
 import { CONTROLICONS } from "@/utils/icon/icon";
 import "./index.css";
-import { CatContext } from "@/entrypoints/content/container/CatContainer";
+
+import { DragControlContext } from "@/entrypoints/content/container/DragControlContainer";
 
 const PanelControl = React.memo(() => {
 
-    const { isTakeScreenshot, setIsTakeScreenshot } = useContext(CatContext);
-
-    const [active, setActive] = React.useState<number | null>(null);
-
-    const [step, setStep] = React.useState<number>(0);
+    const { activeControl, setActiveControl, step, handleCaptureClose } = useContext(DragControlContext);
 
     const handleActClick = useCallback((i: number) => {
         switch (i) {
@@ -31,7 +28,7 @@ const PanelControl = React.memo(() => {
                 break;
             case 9:
                 // 关闭
-                setIsTakeScreenshot(false);
+                handleCaptureClose();
                 break;
             case 10:
                 // 保存
@@ -40,7 +37,7 @@ const PanelControl = React.memo(() => {
                 break;
         }
 
-        setActive(i);
+        setActiveControl(i);
     }, []);
 
     return (
@@ -50,7 +47,7 @@ const PanelControl = React.memo(() => {
                     {i === 7 && <div className="panel-line"></div>}
                     <div className="panel-control-item" title={it.name}>
                         <span className={classNames('panel-icon iconfont', it.icon, {
-                            'panel-active': active === i && i !== 7,
+                            'panel-active': activeControl === i && i !== 7,
                             'panel-disabled': i === 7 && step === 0,
                         })} onClick={() => handleActClick(it.id)}></span>
                     </div>
