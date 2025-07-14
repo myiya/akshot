@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useCallback } from "react";
 import classNames from "classnames";
 import { CONTROLICONS } from "@/utils/icon/icon";
 import "./index.css";
@@ -7,7 +7,7 @@ import { DragControlContext } from "@/entrypoints/content/container/DragControlC
 
 const PanelControl = React.memo(() => {
 
-    const { activeControl, setActiveControl, step, handleCaptureClose } = useContext(DragControlContext);
+    const { activeControl, setActiveControl, step, handleCaptureClose, handleDowloadCapture } = useContext(DragControlContext);
 
     const handleActClick = useCallback((i: number) => {
         switch (i) {
@@ -25,6 +25,7 @@ const PanelControl = React.memo(() => {
                 break;
             case 8:
                 // 下载
+                handleDowloadCapture();
                 break;
             case 9:
                 // 关闭
@@ -38,7 +39,7 @@ const PanelControl = React.memo(() => {
         }
 
         setActiveControl(i);
-    }, []);
+    }, [handleCaptureClose, handleDowloadCapture, setActiveControl]);
 
     return (
         <div className="panel-control">

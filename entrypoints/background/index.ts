@@ -1,5 +1,5 @@
 import { dataUrltoBlob } from "@/utils";
-import { onMessage, sendActMessage } from "@/messaging";
+import { getActTabId, onMessage, sendActMessage } from "@/messaging";
 import { saveScreenshot, getScreenshotsByUrl, getAllScreenshots, deleteScreenshot, clearScreenshotsByUrl } from "@/utils/db";
 
 export default defineBackground(() => {
@@ -14,17 +14,7 @@ export default defineBackground(() => {
         type: 'TAKE_SCREENSHOT', 
         payload: data
       })
-      // // 获取当前活动标签页
-      // const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-      // if (tabs.length === 0 || !tabs[0].id) {
-      //   throw new Error('No active tab found');
-      // }
       
-      // // 转发消息到content脚本
-      // await browser.tabs.sendMessage(tabs[0].id, {
-      //   type: 'take-to-content',
-      //   data: data
-      // });
     } catch (error) {
       console.error('Failed to forward screenshot request:', error);
     }
@@ -32,6 +22,9 @@ export default defineBackground(() => {
 
   // 下载图片
   onMessage('download-screenshot', async({ data }) => {
+    // 获取当前活动标签页窗口截图
+    const dataUrl = await getCurrentCapture();
+    console.log('dataUrl', dataUrl);
     
   });
   

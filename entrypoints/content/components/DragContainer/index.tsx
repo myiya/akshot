@@ -1,21 +1,18 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { CollectedRectType, DragResizableBox } from "../DragResize";
+import { DragControlContext } from "../../container/DragControlContainer";
 import "./index.css";
 
 const DragContainer = React.memo(() => {
+  // 使用DragControlContext中的rect状态
+  const { rect, setRect } = useContext(DragControlContext);
+  
   // 窗口大小状态
   const [documentSize, setDocumentSize] = useState(() => ({
     width: window.innerWidth,
     height: window.innerHeight,
   }));
 
-  // 拖拽框的位置和大小
-  const [rect, setRect] = useState<CollectedRectType>({
-    width: 0,
-    height: 0,
-    left: 0,
-    top: 0,
-  });
 
   // 拖拽状态
   const [isDragging, setIsDragging] = useState(false);
@@ -36,32 +33,30 @@ const DragContainer = React.memo(() => {
   // 调整拖拽框位置以确保不超出边界
   const adjustRectPosition = useCallback(
     (newSize: { width: number; height: number }) => {
-      setRect((prevRect) => {
-        const { width: rectWidth, height: rectHeight } = prevRect;
-        let { left, top } = prevRect;
+      const { width: rectWidth, height: rectHeight } = rect;
+      let { left, top } = rect;
 
-        // 确保拖拽框不超出右边界
-        if (left + rectWidth > newSize.width) {
-          left = Math.max(0, newSize.width - rectWidth);
-        }
+      // 确保拖拽框不超出右边界
+      if (left + rectWidth > newSize.width) {
+        left = Math.max(0, newSize.width - rectWidth);
+      }
 
-        // 确保拖拽框不超出下边界
-        if (top + rectHeight > newSize.height) {
-          top = Math.max(0, newSize.height - rectHeight);
-        }
+      // 确保拖拽框不超出下边界
+      if (top + rectHeight > newSize.height) {
+        top = Math.max(0, newSize.height - rectHeight);
+      }
 
-        // 确保拖拽框不超出左边界和上边界
-        left = Math.max(0, left);
-        top = Math.max(0, top);
+      // 确保拖拽框不超出左边界和上边界
+      left = Math.max(0, left);
+      top = Math.max(0, top);
 
-        return {
-          ...prevRect,
-          left,
-          top,
-        };
+      setRect({
+        ...rect,
+        left,
+        top,
       });
     },
-    []
+    [rect, setRect]
   );
 
   // 处理鼠标按下事件 - 开始拖拽
@@ -92,7 +87,7 @@ const DragContainer = React.memo(() => {
       width: 0,
       height: 0,
     });
-  }, []);
+  }, [setRect]);
 
   // 处理鼠标移动事件 - 拖拽中
   const handleMouseMove = useCallback(
@@ -137,7 +132,7 @@ const DragContainer = React.memo(() => {
         setIsBoxVisible(true);
       }
     },
-    [isDragging, documentSize]
+    [isDragging, documentSize, setRect]
   );
 
   // 处理鼠标释放事件 - 结束拖拽
@@ -169,7 +164,7 @@ const DragContainer = React.memo(() => {
         }
       }, 50);
     }
-  }, [isDragging, rect.width, rect.height]);
+  }, [isDragging, rect.width, rect.height, setRect]);
 
   // 监听窗口大小变化
   useEffect(() => {

@@ -1,8 +1,9 @@
+import { getActTabId } from "@/messaging";
 
 /**
  * @description dataUrl 转 Blob
- * @param dataUrl 
- * @returns 
+ * @param dataUrl
+ * @returns
  */
 export function dataUrltoBlob(dataUrl: string): Blob {
   // convert base64 to raw binary data held in a string
@@ -26,4 +27,24 @@ export function dataUrltoBlob(dataUrl: string): Blob {
   // write the ArrayBuffer to a blob, and you're done
   var blob = new Blob([ab], { type: mimeString });
   return blob;
+}
+
+/**
+ * @description 获取当前窗口的截图
+ * @returns
+ */
+export async function getCurrentCapture() {
+  const tabId = await getActTabId();
+  const tab = await browser.tabs.get(tabId);
+  const windowId = tab.windowId;
+  console.log("windowId", windowId);
+  return new Promise((resolve, reject) => {
+    browser.tabs.captureVisibleTab(windowId, { format: "png" }, (dataUrl) => {
+      if (browser.runtime.lastError) {
+        reject(browser.runtime.lastError);
+        return;
+      }
+      resolve(dataUrl);
+    });
+  });
 }
