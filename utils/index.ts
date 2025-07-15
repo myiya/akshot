@@ -33,7 +33,7 @@ export function dataUrltoBlob(dataUrl: string): Blob {
  * @description 获取当前窗口的截图
  * @returns
  */
-export async function getCurrentCapture() {
+export async function getCurrentCapture(): Promise<string> {
   const tabId = await getActTabId();
   const tab = await browser.tabs.get(tabId);
   const windowId = tab.windowId;

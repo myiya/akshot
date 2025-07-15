@@ -1,6 +1,7 @@
 import { dataUrltoBlob } from "@/utils";
 import { getActTabId, onMessage, sendActMessage } from "@/messaging";
 import { saveScreenshot, getScreenshotsByUrl, getAllScreenshots, deleteScreenshot, clearScreenshotsByUrl } from "@/utils/db";
+import { CollectedRectType } from "@/messaging/types";
 
 export default defineBackground(() => {
   console.log('Background script initialized', { id: browser.runtime.id });
@@ -24,8 +25,8 @@ export default defineBackground(() => {
   onMessage('download-screenshot', async({ data }) => {
     // 获取当前活动标签页窗口截图
     const dataUrl = await getCurrentCapture();
-    console.log('dataUrl', dataUrl);
-    
+    // let rect = data.payload.rect as CollectedRectType;
+    return dataUrl;
   });
   
   // 监听来自content脚本的数据库操作请求

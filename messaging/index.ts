@@ -1,5 +1,5 @@
 import { defineExtensionMessaging } from '@webext-core/messaging';
-import type { Message, MessageType } from './types';
+import type { CollectedRectType, Message, MessageType } from './types';
 
 // 定义消息协议
 interface MessagingProtocol {
@@ -34,7 +34,7 @@ interface MessagingProtocol {
    * @description 下载截图
    * @param message 包含要下载的截图ID
    */
-  'download-screenshot'(message: { type: MessageType; payload: { id: string } }): Promise<void>;
+  'download-screenshot'(message: { type: MessageType }): Promise<string>;
 
   /**
    * @description 获取当前网站的所有截图

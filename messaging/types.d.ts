@@ -18,3 +18,10 @@ export interface Message {
   type: MessageType;
   payload?: any;
 }
+
+export type CollectedRectType = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};

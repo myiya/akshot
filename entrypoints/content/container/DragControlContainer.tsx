@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext, useCallback } from "react";
-import { onMessage } from "@/messaging";
+import { onMessage, sendActMessage, sendMessage } from "@/messaging";
 import { CatContext } from "./CatContainer";
 import { CollectedRectType } from "../components/DragResize";
 
@@ -50,8 +50,6 @@ const DragControlContainer = React.memo<React.PropsWithChildren>((props) => {
     top: 0,
   });
 
-  console.log('???', rect);
-
   /**
    * @name 关闭截图
    */
@@ -65,10 +63,33 @@ const DragControlContainer = React.memo<React.PropsWithChildren>((props) => {
   const handleDowloadCapture = useCallback(async () => {
 
     console.log('rect', rect);
-
-    // await sendActMessage('download-screenshot', {
-    //   type: 'DOWNLOAD_SCREENSHOT',
-    // });
+    let dataUrl = await sendMessage('download-screenshot', {
+      type: 'DOWNLOAD_SCREENSHOT',
+    });
+    console.log('dataUrl', dataUrl);
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'screenshot.png';
+    a.click();
+    // canvas 截取图片位置大小
+    // if (rect) {
+    //   const canvas = document.createElement('canvas');
+    //   const ctx = canvas.getContext('2d');
+    //   const img = new Image();
+    //   img.src = dataUrl;
+    //   img.onload = () => {
+    //     canvas.width = rect.width;
+    //     canvas.height = rect.height;
+    //     ctx?.drawImage(img, rect.left, rect.top, rect.width, rect.height, 0, 0, rect.width, rect.height);
+    //     const newDataUrl = canvas.toDataURL('image/png');
+    //     console.log('newDataUrl', newDataUrl);
+    //     // 下载图片
+    //     const a = document.createElement('a');
+    //     a.href = newDataUrl;
+    //     a.download = 'screenshot.png';
+    //     a.click();
+    //   }
+    // }
   }, [rect]);
 
   const memoCtx = useMemo(() => {
